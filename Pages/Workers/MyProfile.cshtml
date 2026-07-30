@@ -1,0 +1,163 @@
+@page
+@model ShramSetu.Pages.Workers.MyProfileModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person-gear me-2"></i>My Profile</h2>
+    <form method="post" asp-page-handler="ToggleAvailability">
+        @if (Model.Worker?.IsAvailable == true)
+        {
+            <button type="submit" class="btn btn-outline-danger">
+                <i class="bi bi-toggle-on me-1"></i> Set Unavailable
+            </button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-outline-success">
+                <i class="bi bi-toggle-off me-1"></i> Set Available
+            </button>
+        }
+    </form>
+</div>
+
+@if (Model.Worker is null)
+{
+    <div class="alert alert-warning">No worker profile found for your account.</div>
+}
+else
+{
+    <div class="row">
+        <!-- Profile summary card -->
+        <div class="col-md-3 text-center mb-4">
+            @if (!string.IsNullOrEmpty(Model.Worker.PhotoUrl))
+            {
+                <img src="@Model.Worker.PhotoUrl" class="rounded-circle mb-3" width="110" height="110"
+                     style="object-fit:cover" alt="photo" />
+            }
+            else
+            {
+                <i class="bi bi-person-circle text-secondary" style="font-size:5rem"></i>
+            }
+            <h5 class="mt-2">@Model.Worker.FullName</h5>
+            <p class="text-muted mb-1">@Model.Worker.SkillCategory.Name</p>
+            @{
+                var (badgeClass, badgeText) = Model.Worker.KycStatus switch
+                {
+                    VerificationStatus.Verified    => ("bg-success", "KYC Verified"),
+                    VerificationStatus.UnderReview => ("bg-warning text-dark", "Under Review"),
+                    VerificationStatus.Rejected    => ("bg-danger", "KYC Rejected"),
+                    _                              => ("bg-secondary", "Verification Pending")
+                };
+            }
+            <span class="badge @badgeClass">@badgeText</span>
+
+            <div class="mt-3">
+                <a asp-page="/Workers/Profile" asp-route-id="@Model.Worker.Id"
+                   class="btn btn-sm btn-outline-primary w-100">
+                    <i class="bi bi-eye me-1"></i> View Public Profile
+                </a>
+            </div>
+
+            <!-- Documents -->
+            <div class="mt-4 text-start">
+                <h6 class="border-bottom pb-1">Documents</h6>
+                @foreach (var doc in Model.Worker.Documents)
+                {
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <a href="@doc.FileUrl" target="_blank" class="small">@doc.Type</a>
+                        @if (doc.IsVerified)
+                        {
+                            <span class="badge bg-success"><i class="bi bi-check"></i></span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Pending</span>
+                        }
+                    </div>
+                }
+                <form method="post" asp-page-handler="UploadDocument" enctype="multipart/form-data" class="mt-2">
+                    <select name="docType" class="form-select form-select-sm mb-1">
+                        <option value="Aadhaar">Aadhaar</option>
+                        <option value="PAN">PAN</option>
+                        <option value="VoterID">Voter ID</option>
+                        <option value="WorkCertificate">Work Certificate</option>
+                    </select>
+                    <input type="file" name="docFile" accept="image/*,.pdf" class="form-control form-control-sm mb-1" required />
+                    <button type="submit" class="btn btn-sm btn-outline-secondary w-100">
+                        <i class="bi bi-upload me-1"></i> Upload
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit form -->
+        <div class="col-md-9">
+            <form method="post" asp-page-handler="SaveProfile">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <h5 class="border-bottom pb-2 mb-3">Edit Details</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.FullName" class="form-label"></label>
+                        <input asp-for="Input.FullName" class="form-control" />
+                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.Phone" class="form-label"></label>
+                        <input asp-for="Input.Phone" class="form-control" />
+                        <span asp-validation-for="Input.Phone" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.SubSkills" class="form-label"></label>
+                    <input asp-for="Input.SubSkills" class="form-control" placeholder="Comma-separated sub-skills" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Input.YearsOfExperience" class="form-label"></label>
+                        <input asp-for="Input.YearsOfExperience" type="number" min="0" class="form-control" />
+                        <span asp-validation-for="Input.YearsOfExperience" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Input.ExpectedDailyWage" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">&#8377;</span>
+                            <input asp-for="Input.ExpectedDailyWage" type="number" min="0" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Input.ExpectedMonthlyWage" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">&#8377;</span>
+                            <input asp-for="Input.ExpectedMonthlyWage" type="number" min="0" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.LocationCity" class="form-label"></label>
+                        <input asp-for="Input.LocationCity" class="form-control" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Input.LocationState" class="form-label"></label>
+                        <input asp-for="Input.LocationState" class="form-control" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-floppy me-1"></i> Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

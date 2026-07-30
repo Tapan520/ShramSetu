@@ -1,0 +1,51 @@
+﻿@page "{id:guid}"
+@model ShramSetu.Pages.Jobs.ApplyModel
+@{
+    ViewData["Title"] = "Apply for Job";
+}
+
+@if (Model.Job is null)
+{
+    <div class="alert alert-warning">Job not found.</div>
+}
+else
+{
+    <h2 class="mb-4"><i class="bi bi-send me-2"></i>Apply  @Model.Job.Title</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h6 class="mb-1">@Model.Job.Title</h6>
+                    <p class="text-muted small mb-1">@Model.Job.Employer.Name  @Model.Job.SkillCategory.Name</p>
+                    <ul class="list-unstyled small mb-0">
+                        <li><i class="bi bi-geo-alt me-1"></i>@(Model.Job.LocationCity ?? "")</li>
+                        <li><i class="bi bi-cash me-1"></i>&#8377;@Model.Job.DailyWage / day  @Model.Job.DurationDays day(s)</li>
+                        <li><i class="bi bi-calendar me-1"></i>Starts @Model.Job.StartDate.ToString("dd MMM yyyy")</li>
+                    </ul>
+                </div>
+            </div>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Input.JobPostId" />
+
+                <div class="mb-3">
+                    <label asp-for="Input.CoverNote" class="form-label"></label>
+                    <textarea asp-for="Input.CoverNote" rows="5" class="form-control"
+                              placeholder="Tell the employer why you're the right person for this job"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-send me-1"></i> Submit Application
+                </button>
+                <a asp-page="/Jobs/Detail" asp-route-id="@Model.Job.Id"
+                   class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

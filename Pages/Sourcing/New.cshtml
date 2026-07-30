@@ -1,0 +1,80 @@
+﻿@page
+@model ShramSetu.Pages.Sourcing.NewModel
+@{
+    ViewData["Title"] = "Request Workers";
+}
+
+<h2 class="mb-4"><i class="bi bi-headset me-2"></i>Request Workers via Concierge</h2>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-1"></i>
+            Describe your requirements below. Our team will source the right workers and get back to you within 24 hours.
+        </div>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.SkillCategoryId" class="form-label">Skill Required</label>
+                <select asp-for="Input.SkillCategoryId" asp-items="Model.SkillCategoryOptions" class="form-select">
+                    <option value=""> Select Skill </option>
+                </select>
+                <span asp-validation-for="Input.SkillCategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.WorkerCount" class="form-label"></label>
+                    <input asp-for="Input.WorkerCount" type="number" min="1" class="form-control" />
+                    <span asp-validation-for="Input.WorkerCount" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.DurationDays" class="form-label"></label>
+                    <input asp-for="Input.DurationDays" type="number" min="1" class="form-control" />
+                    <span asp-validation-for="Input.DurationDays" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.BudgetPerDay" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#8377;</span>
+                        <input asp-for="Input.BudgetPerDay" type="number" min="0" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.LocationCity" class="form-label"></label>
+                    <input asp-for="Input.LocationCity" class="form-control" placeholder="e.g. Pune" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.LocationState" class="form-label"></label>
+                    <input asp-for="Input.LocationState" class="form-control" placeholder="e.g. Maharashtra" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Description" class="form-label"></label>
+                <textarea asp-for="Input.Description" rows="4" class="form-control"
+                          placeholder="Describe the work, timing, any special requirements..."></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.ContactPhone" class="form-label"></label>
+                <input asp-for="Input.ContactPhone" class="form-control" placeholder="10-digit mobile number" />
+                <span asp-validation-for="Input.ContactPhone" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-send me-1"></i> Submit Request
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

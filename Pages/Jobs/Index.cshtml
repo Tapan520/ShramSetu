@@ -1,0 +1,132 @@
+﻿@page
+@model ShramSetu.Pages.Jobs.JobsIndexModel
+@{
+    ViewData["Title"] = "Browse Jobs";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0"><i class="bi bi-briefcase me-2"></i>Browse Jobs</h1>
+    @if (User.IsInRole("Employer") || User.IsInRole("Admin"))
+    {
+        <a asp-page="/Jobs/Post" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Post a Job
+        </a>
+    }
+</div>
+
+<!-- Filter bar -->
+<form method="get" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-2 align-items-end">
+            <div class="col-6 col-md-3">
+                <label class="form-label small fw-semibold">Skill</label>
+                <select name="skillCategoryId" class="form-select form-select-sm">
+                    <option value="">All Skills</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <option value="@cat.Id" selected="@(cat.Id == Model.SkillCategoryId)">@cat.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">City</label>
+                <input name="city" value="@Model.City" class="form-control form-control-sm" placeholder="e.g. Mumbai" />
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">Min Wage (&#8377;/day)</label>
+                <input name="minWage" value="@Model.MinWage" type="number" min="0" class="form-control form-control-sm" />
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">Max Wage (&#8377;/day)</label>
+                <input name="maxWage" value="@Model.MaxWage" type="number" min="0" class="form-control form-control-sm" />
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">Sort</label>
+                <select name="sortBy" class="form-select form-select-sm">
+                    <option value="newest"    selected="@(Model.SortBy=="newest")">Newest</option>
+                    <option value="start"     selected="@(Model.SortBy=="start")">Start Date</option>
+                    <option value="wage_asc"  selected="@(Model.SortBy=="wage_asc")">Wage &#8377; Low&#8594;High</option>
+                    <option value="wage_desc" selected="@(Model.SortBy=="wage_desc")">Wage &#8377; High&#8594;Low</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-1 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary btn-sm w-100">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<p class="text-muted small mb-3"><strong>@Model.TotalCount</strong> open job(s) found</p>
+
+@if (!Model.Jobs.Any())
+{
+    <div class="alert alert-info">No jobs match your search. Try different filters.</div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var item in Model.Jobs)
+        {
+            var job = item.Job;
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm job-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="mb-0">@job.Title</h6>
+                            <span class="badge bg-primary ms-2 text-nowrap">@job.SkillCategory.Name</span>
+                        </div>
+                        <p class="text-muted small mb-2">@job.Employer.Name</p>
+                        <ul class="list-unstyled small mb-2">
+                            <li><i class="bi bi-geo-alt me-1 text-primary"></i>@(job.LocationCity ?? "")</li>
+                            <li><i class="bi bi-cash me-1 text-primary"></i>&#8377;@job.DailyWage / day</li>
+                            <li><i class="bi bi-calendar me-1 text-primary"></i>Starts @job.StartDate.ToString("dd MMM yyyy")</li>
+                            <li><i class="bi bi-clock me-1 text-primary"></i>@job.DurationDays day(s)</li>
+                            <li><i class="bi bi-people me-1 text-primary"></i>@job.VacancyCount vacancy(ies)  @item.ApplicationCount applied</li>
+                        </ul>
+                        <p class="small text-muted text-truncate mb-0">@job.Description</p>
+                    </div>
+                    <div class="card-footer bg-transparent d-flex gap-2">
+                        <a asp-page="/Jobs/Detail" asp-route-id="@job.Id"
+                           class="btn btn-outline-primary btn-sm flex-grow-1">View</a>
+                        @if (User.IsInRole("Worker"))
+                        {
+                            <a asp-page="/Jobs/Apply" asp-route-id="@job.Id"
+                               class="btn btn-primary btn-sm flex-grow-1">Apply</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link"
+                           asp-page="/Jobs/Index"
+                           asp-route-page="@i"
+                           asp-route-skillCategoryId="@Model.SkillCategoryId"
+                           asp-route-city="@Model.City"
+                           asp-route-minWage="@Model.MinWage"
+                           asp-route-maxWage="@Model.MaxWage"
+                           asp-route-sortBy="@Model.SortBy">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}
+
+@section Scripts {
+<style>
+    .job-card { transition: transform .15s, box-shadow .15s; }
+    .job-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.12) !important; }
+</style>
+}

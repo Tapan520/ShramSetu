@@ -1,0 +1,81 @@
+﻿@page
+@model ShramSetu.Pages.Admin.BookingsModel
+@{
+    ViewData["Title"] = "Admin  All Bookings";
+}
+
+<h2 class="mb-4"><i class="bi bi-calendar3 me-2"></i>All Bookings</h2>
+
+<ul class="nav nav-tabs mb-3">
+    @foreach (var s in new[] { "Requested", "Confirmed", "InProgress", "Completed", "Cancelled" })
+    {
+        <li class="nav-item">
+            <a class="nav-link @(Model.StatusFilter == s ? "active" : "")"
+               asp-page="/Admin/Bookings" asp-route-statusFilter="@s">@s</a>
+        </li>
+    }
+</ul>
+
+@if (!Model.Bookings.Any())
+{
+    <div class="alert alert-info">No bookings in this status.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Worker</th>
+                    <th>Skill</th>
+                    <th>Employer</th>
+                    <th>Start</th>
+                    <th>Days</th>
+                    <th>Wage/Day</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model.Bookings)
+                {
+                    <tr>
+                        <td><a asp-page="/Workers/Profile" asp-route-id="@b.WorkerId">@b.Worker.FullName</a></td>
+                        <td>@b.Worker.SkillCategory.Name</td>
+                        <td>@b.Employer.Name</td>
+                        <td>@b.StartDate.ToString("dd MMM yy")</td>
+                        <td>@b.DurationDays</td>
+                        <td>&#8377;@b.AgreedWage</td>
+                        <td><span class="badge bg-secondary">@b.Type</span></td>
+                        <td>
+                            @{
+                                var cls = b.Status switch
+                                {
+                                    BookingStatus.Completed => "bg-success",
+                                    BookingStatus.Cancelled => "bg-danger",
+                                    BookingStatus.InProgress => "bg-warning text-dark",
+                                    BookingStatus.Confirmed => "bg-info text-dark",
+                                    _ => "bg-secondary"
+                                };
+                            }
+                            <span class="badge @cls">@b.Status</span>
+                        </td>
+                        <td>
+                            <form method="post" class="d-flex gap-1">
+                                <input type="hidden" name="bookingId" value="@b.Id" />
+                                <select name="newStatus" class="form-select form-select-sm" style="width:auto">
+                                    @foreach (var s in Enum.GetValues<BookingStatus>())
+                                    {
+                                        <option value="@s" selected="@(b.Status == s)">@s</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Set</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

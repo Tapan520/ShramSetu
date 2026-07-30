@@ -1,0 +1,105 @@
+﻿@page
+@model ShramSetu.Pages.Register.WorkerModel
+@{
+    ViewData["Title"] = "Register as a Worker";
+}
+
+<h2 class="mb-4"><i class="bi bi-person-plus me-2"></i>Worker Registration</h2>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <h5 class="border-bottom pb-2 mb-3">Personal Details</h5>
+
+            <div class="mb-3">
+                <label asp-for="Input.FullName" class="form-label"></label>
+                <input asp-for="Input.FullName" class="form-control" />
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Phone" class="form-label"></label>
+                <input asp-for="Input.Phone" class="form-control" placeholder="10-digit mobile number" />
+                <span asp-validation-for="Input.Phone" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.SkillCategoryId" class="form-label">Skill Category</label>
+                <select asp-for="Input.SkillCategoryId" asp-items="Model.SkillCategoryOptions" class="form-select">
+                    <option value=""> Select </option>
+                </select>
+                <span asp-validation-for="Input.SkillCategoryId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.SubSkills" class="form-label"></label>
+                <input asp-for="Input.SubSkills" class="form-control" placeholder="e.g. pipe fitting, bathroom tiling" />
+                <small class="text-muted">Comma-separated sub-skills</small>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.YearsOfExperience" class="form-label"></label>
+                    <input asp-for="Input.YearsOfExperience" type="number" min="0" class="form-control" />
+                    <span asp-validation-for="Input.YearsOfExperience" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.ExpectedDailyWage" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">?</span>
+                        <input asp-for="Input.ExpectedDailyWage" type="number" min="0" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.ExpectedMonthlyWage" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">?</span>
+                        <input asp-for="Input.ExpectedMonthlyWage" type="number" min="0" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.LocationCity" class="form-label"></label>
+                    <input asp-for="Input.LocationCity" class="form-control" placeholder="e.g. Mumbai" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.LocationState" class="form-label"></label>
+                    <input asp-for="Input.LocationState" class="form-control" placeholder="e.g. Maharashtra" />
+                </div>
+            </div>
+
+            <h5 class="border-bottom pb-2 mb-3">Document Upload (KYC)</h5>
+
+            <div class="mb-3">
+                <label asp-for="Input.Photo" class="form-label">Profile Photo</label>
+                <input asp-for="Input.Photo" type="file" accept="image/*" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.AadhaarDocument" class="form-label">Aadhaar Card</label>
+                <input asp-for="Input.AadhaarDocument" type="file" accept="image/*,.pdf" class="form-control" />
+                <small class="text-muted">PDF or image. Your Aadhaar number will be stored securely (hashed).</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+                <i class="bi bi-send me-1"></i> Submit Registration
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

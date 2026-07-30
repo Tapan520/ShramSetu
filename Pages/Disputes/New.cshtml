@@ -1,0 +1,38 @@
+﻿@page
+@model ShramSetu.Pages.Disputes.NewModel
+@{ ViewData["Title"] = "Raise a Dispute"; }
+<h2 class="mb-4"><i class="bi bi-shield-exclamation me-2 text-danger"></i>Raise a Dispute</h2>
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Input.Type" class="form-label">Dispute Type</label>
+                <select asp-for="Input.Type" class="form-select">
+                    @foreach (var t in Enum.GetNames<ShramSetu.Core.Enums.DisputeType>())
+                    { <option value="@t">@t</option> }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Title" class="form-label"></label>
+                <input asp-for="Input.Title" class="form-control" placeholder="Brief subject of the dispute" />
+                <span asp-validation-for="Input.Title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.AgainstUserId" class="form-label">Against (User ID or phone)</label>
+                <input asp-for="Input.AgainstUserId" class="form-control" />
+                <span asp-validation-for="Input.AgainstUserId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Description" class="form-label"></label>
+                <textarea asp-for="Input.Description" rows="5" class="form-control"
+                          placeholder="Describe the issue in detail"></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-danger w-100">
+                <i class="bi bi-send me-1"></i> Submit Dispute
+            </button>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

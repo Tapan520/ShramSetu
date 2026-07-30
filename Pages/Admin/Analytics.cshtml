@@ -1,0 +1,222 @@
+﻿@page
+@model ShramSetu.Pages.Admin.AnalyticsModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Admin  Analytics";
+
+    string JS(IEnumerable<string> v) => JsonSerializer.Serialize(v);
+    string JN(IEnumerable<int>    v) => JsonSerializer.Serialize(v);
+}
+
+<h2 class="mb-4"><i class="bi bi-bar-chart-line me-2"></i>Platform Analytics</h2>
+
+<!-- ?? KPI tiles row 1 ?? -->
+<div class="row g-3 mb-3">
+    <div class="col-6 col-md-3">
+        <div class="card text-bg-primary text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-people fs-2"></i>
+                <h2 class="mt-1 mb-0">@Model.TotalWorkers</h2>
+                <p class="mb-0 small">Total Workers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-bg-success text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-shield-check fs-2"></i>
+                <h2 class="mt-1 mb-0">@Model.VerifiedWorkers</h2>
+                <p class="mb-0 small">Verified Workers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-bg-warning text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-hourglass-split fs-2"></i>
+                <h2 class="mt-1 mb-0">@Model.PendingVerifications</h2>
+                <p class="mb-0 small">Pending KYC</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-bg-info text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-building fs-2"></i>
+                <h2 class="mt-1 mb-0">@Model.TotalEmployers</h2>
+                <p class="mb-0 small">Employers</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ?? KPI tiles row 2 ?? -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-primary text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-calendar-check fs-2 text-primary"></i>
+                <h2 class="mt-1 mb-0 text-primary">@Model.TotalBookings</h2>
+                <p class="mb-0 small text-muted">Total Bookings</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-success text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-check2-all fs-2 text-success"></i>
+                <h2 class="mt-1 mb-0 text-success">@Model.CompletedBookings</h2>
+                <p class="mb-0 small text-muted">Completed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-warning text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-card-checklist fs-2 text-warning"></i>
+                <h2 class="mt-1 mb-0 text-warning">@Model.OpenSourcingRequests</h2>
+                <p class="mb-0 small text-muted">Open Requests</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-secondary text-center shadow-sm h-100">
+            <div class="card-body py-3">
+                <i class="bi bi-star-half fs-2 text-warning"></i>
+                <h2 class="mt-1 mb-0">@Model.PlatformAverageRating.ToString("0.0") <small class="fs-6">/ 5</small></h2>
+                <p class="mb-0 small text-muted">Avg Rating (@Model.TotalReviews reviews)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ?? Charts row ?? -->
+<div class="row g-4 mb-4">
+    <!-- Monthly trend  line chart -->
+    <div class="col-md-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">Monthly Activity (Last 6 Months)</div>
+            <div class="card-body">
+                <canvas id="trendChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Bookings by status  doughnut -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">Bookings by Status</div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="statusChart" height="180"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ?? Tables row ?? -->
+<div class="row g-4">
+    <!-- Workers by skill  horizontal bar -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">Workers by Skill Category</div>
+            <div class="card-body">
+                <canvas id="skillChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <!-- Quick stats table -->
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">Booking Status Breakdown</div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>Status</th><th class="text-end">Count</th><th class="text-end">%</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var kv in Model.BookingsByStatus)
+                        {
+                            var pct = Model.TotalBookings > 0
+                                ? (kv.Value * 100.0 / Model.TotalBookings).ToString("0")
+                                : "0";
+                            <tr>
+                                <td>@kv.Key</td>
+                                <td class="text-end">@kv.Value</td>
+                                <td class="text-end text-muted">@pct%</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+    // ?? Monthly trend line chart ??
+    new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+            labels: @Html.Raw(JS(Model.MonthLabels)),
+            datasets: [
+                {
+                    label: 'Worker Registrations',
+                    data: @Html.Raw(JN(Model.MonthlyRegistrations)),
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13,110,253,.1)',
+                    tension: .35,
+                    fill: true
+                },
+                {
+                    label: 'New Bookings',
+                    data: @Html.Raw(JN(Model.MonthlyBookings)),
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25,135,84,.1)',
+                    tension: .35,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // ?? Bookings by status doughnut ??
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: @Html.Raw(JS(Model.BookingsByStatus.Keys)),
+            datasets: [{
+                data: @Html.Raw(JN(Model.BookingsByStatus.Values)),
+                backgroundColor: ['#6c757d','#0dcaf0','#ffc107','#198754','#dc3545']
+            }]
+        },
+        options: {
+            plugins: { legend: { position: 'bottom' } },
+            cutout: '60%'
+        }
+    });
+
+    // ?? Workers by skill horizontal bar ??
+    new Chart(document.getElementById('skillChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(JS(Model.WorkersBySkill.Keys)),
+            datasets: [{
+                label: 'Workers',
+                data: @Html.Raw(JN(Model.WorkersBySkill.Values)),
+                backgroundColor: 'rgba(13,110,253,.7)',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+</script>
+}

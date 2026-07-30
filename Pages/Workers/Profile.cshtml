@@ -1,0 +1,212 @@
+﻿@page "{id:guid}"
+@model ShramSetu.Pages.Workers.ProfileModel
+@{
+    ViewData["Title"] = Model.Worker?.FullName ?? "Worker Profile";
+}
+
+@if (Model.Worker is null)
+{
+    <div class="alert alert-warning">Worker not found.</div>
+}
+else
+{
+    <div class="row g-4">
+        <!-- ?? Left column ?? -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body py-4">
+                    @{
+                        var initials    = string.Join("", (Model.Worker.FullName ?? "?").Split(' ').Take(2).Select(p => p.Length > 0 ? p[0].ToString().ToUpper() : ""));
+                        var avatarColors = new[] { "#0d6efd","#198754","#dc3545","#fd7e14","#6f42c1","#0dcaf0","#20c997" };
+                        var avatarColor  = avatarColors[Math.Abs((Model.Worker.FullName ?? "").GetHashCode()) % avatarColors.Length];
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Worker.PhotoUrl) && !Model.Worker.PhotoUrl.Contains("placeholder"))
+                    {
+                        <img src="@Model.Worker.PhotoUrl"
+                             class="rounded-circle mb-3"
+                             width="120" height="120"
+                             style="object-fit:cover"
+                             alt="@Model.Worker.FullName"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                        <div class="rounded-circle mb-3 mx-auto d-none align-items-center justify-content-center text-white fw-bold"
+                             style="width:120px;height:120px;background:@avatarColor;font-size:2.2rem">@initials</div>
+                    }
+                    else
+                    {
+                        <div class="rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center text-white fw-bold"
+                             style="width:120px;height:120px;background:@avatarColor;font-size:2.2rem">@initials</div>
+                    }
+
+                    <h4 class="mb-1">@Model.Worker.FullName</h4>
+                    <p class="text-muted mb-2">@Model.Worker.SkillCategory.Name</p>
+
+                    <!-- KYC badge -->
+                    @if (Model.Worker.KycStatus == VerificationStatus.Verified)
+                    {
+                        <span class="badge bg-success fs-6 mb-2"><i class="bi bi-shield-check me-1"></i>KYC Verified</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6 mb-2">Verification Pending</span>
+                    }
+
+                    <!-- Availability -->
+                    <div class="mt-1 mb-3">
+                        @if (Model.Worker.IsAvailable)
+                        {
+                            <span class="badge bg-primary"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Available</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Unavailable</span>
+                        }
+                    </div>
+
+                    <!-- Stat pills -->
+                    <div class="row g-2 text-center mt-1">
+                        <div class="col-4">
+                            <div class="bg-light rounded p-2">
+                                <div class="fw-bold text-primary">@(Model.AverageRating > 0 ? Model.AverageRating.ToString("0.0") : "N/A")</div>
+                                <div style="font-size:.7rem" class="text-muted">Rating</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light rounded p-2">
+                                <div class="fw-bold text-success">@Model.CompletedJobCount</div>
+                                <div style="font-size:.7rem" class="text-muted">Jobs Done</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light rounded p-2">
+                                <div class="fw-bold text-info">@Model.Worker.YearsOfExperience</div>
+                                <div style="font-size:.7rem" class="text-muted">Yrs Exp</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-skills card -->
+            @if (!string.IsNullOrWhiteSpace(Model.Worker.SubSkills))
+            {
+                <div class="card shadow-sm mt-3">
+                    <div class="card-header fw-semibold">Sub-skills</div>
+                    <div class="card-body">
+                        @foreach (var skill in Model.Worker.SubSkills.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                        {
+                            <span class="badge bg-light text-dark border me-1 mb-1 py-2 px-3">@skill</span>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Verified documents -->
+            @{
+                var verifiedDocs = Model.Worker.Documents.Where(d => d.IsVerified).ToList();
+            }
+            @if (verifiedDocs.Any())
+            {
+                <div class="card shadow-sm mt-3">
+                    <div class="card-header fw-semibold">Verified Documents</div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var doc in verifiedDocs)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="@doc.FileUrl" target="_blank">@doc.Type</a>
+                                <span class="badge bg-success"><i class="bi bi-check"></i></span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+
+        <!-- ?? Right column ?? -->
+        <div class="col-md-8">
+            <!-- Details -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header fw-semibold">Details</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Location</dt>
+                        <dd class="col-sm-8">@(Model.Worker.LocationCity ?? "N/A"), @(Model.Worker.LocationState ?? "")</dd>
+
+                        <dt class="col-sm-4">Daily Wage</dt>
+                        <dd class="col-sm-8">&#8377;@Model.Worker.ExpectedDailyWage</dd>
+
+                        <dt class="col-sm-4">Monthly Wage</dt>
+                        <dd class="col-sm-8">&#8377;@Model.Worker.ExpectedMonthlyWage</dd>
+
+                        <dt class="col-sm-4">Total Bookings</dt>
+                        <dd class="col-sm-8">@Model.TotalBookingCount (@Model.CompletedJobCount completed)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header fw-semibold d-flex justify-content-between">
+                    <span>Reviews</span>
+                    @if (Model.Reviews.Any())
+                    {
+                        <span class="text-warning fw-bold">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="bi @(i <= (int)Math.Round(Model.AverageRating) ? "bi-star-fill" : "bi-star")"></i>
+                            }
+                            @Model.AverageRating.ToString("0.0") / 5 &nbsp;(@Model.Reviews.Count review(s))
+                        </span>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (!Model.Reviews.Any())
+                    {
+                        <p class="text-muted mb-0">No reviews yet.</p>
+                    }
+                    else
+                    {
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <div class="mb-3 p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="bi @(i <= review.Rating ? "bi-star-fill text-warning" : "bi-star text-secondary")"></i>
+                                        }
+                                    </div>
+                                    <small class="text-muted">@review.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(review.Comment))
+                                {
+                                    <p class="mb-0 mt-1">@review.Comment</p>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- CTA -->
+            @if (User.Identity?.IsAuthenticated == true && !User.IsInRole("Worker"))
+            {
+                <div class="d-flex gap-2">
+                    <a asp-page="/Account/Book" asp-route-workerId="@Model.Worker.Id"
+                       class="btn btn-primary flex-grow-1">
+                        <i class="bi bi-calendar-check me-1"></i> Book This Worker
+                    </a>
+                    <a asp-page="/Sourcing/New" class="btn btn-outline-secondary flex-grow-1">
+                        <i class="bi bi-headset me-1"></i> Request via Concierge
+                    </a>
+                </div>
+            }
+            else if (User.Identity?.IsAuthenticated != true)
+            {
+                <div class="alert alert-light border">
+                    <a asp-area="Identity" asp-page="/Account/Login">Login</a> or
+                    <a asp-page="/Register/Employer">register as an employer</a> to book this worker.
+                </div>
+            }
+        </div>
+    </div>
+}

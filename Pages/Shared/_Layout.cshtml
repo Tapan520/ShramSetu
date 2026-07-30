@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ShramSetu</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ShramSetu.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">
+                    <i class="bi bi-people-fill me-1"></i>ShramSetu
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-page="/Workers/Index">Find Workers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-page="/Jobs/Index">Jobs</a>
+                        </li>
+                        @if (User.IsInRole("Worker"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Worker</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="/Workers/MyProfile"><i class="bi bi-person me-1"></i>My Profile</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Workers/Onboarding"><i class="bi bi-check2-square me-1"></i>Setup Wizard</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Jobs/MyApplications"><i class="bi bi-file-earmark-text me-1"></i>My Applications</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Workers/Availability"><i class="bi bi-calendar3 me-1"></i>Availability</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Workers/Wallet"><i class="bi bi-wallet2 me-1"></i>My Wallet</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-page="/Disputes/Index"><i class="bi bi-shield-exclamation me-1"></i>Disputes</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Employer") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Employer</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="/Employer/Dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Jobs/Post"><i class="bi bi-plus-circle me-1"></i>Post Job</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Employer/SavedWorkers"><i class="bi bi-bookmark-heart me-1"></i>Saved Workers</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Employer/Plans"><i class="bi bi-gem me-1"></i>Subscription Plans</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-page="/Sourcing/New"><i class="bi bi-headset me-1"></i>Request Workers</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Sourcing/MyRequests"><i class="bi bi-list-task me-1"></i>My Requests</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-page="/Disputes/Index"><i class="bi bi-shield-exclamation me-1"></i>Disputes</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Admin</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="/Admin/Dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Workers"><i class="bi bi-person-check me-1"></i>Verify Workers</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Sourcing"><i class="bi bi-headset me-1"></i>Sourcing</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Bookings"><i class="bi bi-calendar2-check me-1"></i>Bookings</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Analytics"><i class="bi bi-bar-chart-line me-1"></i>Analytics</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/SkillCategories"><i class="bi bi-tags me-1"></i>Skill Categories</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Announcements"><i class="bi bi-megaphone me-1"></i>Announcements</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/FeatureFlags"><i class="bi bi-toggles me-1"></i>Feature Flags</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/AuditLogs"><i class="bi bi-journal-check me-1"></i>Audit Logs</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white position-relative" asp-page="/Account/Notifications">
+                                    <i class="bi bi-bell fs-5"></i>
+                                    <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-page="/Account/Bookings">My Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-area="Identity" asp-page="/Account/Logout"
+                                      asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                                    <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                                    Register
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-page="/Register/Worker"><i class="bi bi-person-arms-up me-1"></i>As Worker</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Register/Employer"><i class="bi bi-building me-1"></i>As Employer / Contractor</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @if (TempData["Success"] is string successMsg)
+            {
+                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                    <i class="bi bi-check-circle me-1"></i> @successMsg
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] is string errorMsg)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                    <i class="bi bi-exclamation-circle me-1"></i> @errorMsg
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-4 py-3">
+        <div class="container">
+            &copy; @DateTime.Now.Year ShramSetu — Connecting workers with opportunity.
+            <span class="float-end"><a asp-area="" asp-page="/Privacy">Privacy</a></span>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+        <script>
+            (function () {
+                const conn = new signalR.HubConnectionBuilder()
+                    .withUrl("/hubs/notifications")
+                    .withAutomaticReconnect()
+                    .build();
+
+                conn.on("ReceiveNotification", (data) => {
+                    // Update bell badge
+                    const badge = document.getElementById('notif-badge');
+                    if (badge) {
+                        const count = parseInt(badge.textContent || '0') + 1;
+                        badge.textContent = count > 99 ? '99+' : count;
+                        badge.classList.remove('d-none');
+                    }
+                    // Show toast notification
+                    const toastEl = document.createElement('div');
+                    toastEl.className = 'toast align-items-center text-white bg-primary border-0 position-fixed bottom-0 end-0 m-3';
+                    toastEl.style.zIndex = '9999';
+                    toastEl.setAttribute('role', 'alert');
+                    toastEl.innerHTML = `<div class="d-flex"><div class="toast-body">
+                        <strong>${data.title}</strong><br><small>${data.message}</small>
+                        ${data.actionUrl ? `<br><a href="${data.actionUrl}" class="text-white text-decoration-underline">View →</a>` : ''}
+                    </div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+                    document.body.appendChild(toastEl);
+                    new bootstrap.Toast(toastEl, { delay: 6000 }).show();
+                });
+
+                conn.start().catch(() => {});
+            })();
+        </script>
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

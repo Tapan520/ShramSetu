@@ -1,0 +1,197 @@
+﻿@page
+@model ShramSetu.Pages.Workers.WorkersIndexModel
+@{
+    ViewData["Title"] = "Find Workers";
+
+    string Stars(double avg, int count)
+    {
+        var filled = (int)Math.Round(avg);
+        var html = new System.Text.StringBuilder();
+        for (int i = 1; i <= 5; i++)
+            html.Append($"<i class=\"bi {(i <= filled ? "bi-star-fill text-warning" : "bi-star text-secondary")} small\"></i>");
+        if (count > 0)
+            html.Append($" <span class=\"text-muted\" style=\"font-size:.75rem\">({count})</span>");
+        return html.ToString();
+    }
+}
+
+<h1 class="mb-3"><i class="bi bi-search me-2"></i>Find Workers</h1>
+
+<!-- ?? Filter bar ?? -->
+<form method="get" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row g-2 align-items-end">
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">Skill</label>
+                <select name="skillCategoryId" class="form-select form-select-sm">
+                    <option value="">All Skills</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <option value="@cat.Id" selected="@(cat.Id == Model.SkillCategoryId)">@cat.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">City</label>
+                <input name="city" value="@Model.City" class="form-control form-control-sm" placeholder="e.g. Mumbai" />
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">Max Daily Wage (&#8377;)</label>
+                <input name="maxWage" value="@Model.MaxWage" type="number" min="0"
+                       class="form-control form-control-sm" placeholder="e.g. 1000" />
+            </div>
+            <div class="col-6 col-md-1">
+                <label class="form-label small fw-semibold">Min Exp (yrs)</label>
+                <input name="minExperience" value="@Model.MinExperience" type="number" min="0"
+                       class="form-control form-control-sm" placeholder="0" />
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-semibold">Min Rating</label>
+                <select name="minRating" class="form-select form-select-sm">
+                    <option value="">Any</option>
+                    @foreach (var r in new[] { 4.5, 4.0, 3.5, 3.0 })
+                    {
+                        <option value="@r" selected="@(Model.MinRating == r)">&#9733; @r &amp; above</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6 col-md-1">
+                <label class="form-label small fw-semibold">Sort</label>
+                <select name="sortBy" class="form-select form-select-sm">
+                    <option value="newest"     selected="@(Model.SortBy == "newest")">Newest</option>
+                    <option value="rating"     selected="@(Model.SortBy == "rating")">Top Rated</option>
+                    <option value="jobs"       selected="@(Model.SortBy == "jobs")">Most Jobs</option>
+                    <option value="wage_asc"   selected="@(Model.SortBy == "wage_asc")">Wage &#8377; Low&#8594;High</option>
+                    <option value="wage_desc"  selected="@(Model.SortBy == "wage_desc")">Wage &#8377; High&#8594;Low</option>
+                    <option value="experience" selected="@(Model.SortBy == "experience")">Experience</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-1 d-flex align-items-end gap-1">
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" name="verifiedOnly" value="true"
+                           id="verifiedOnly" @(Model.VerifiedOnly ? "checked" : "") />
+                    <label class="form-check-label small" for="verifiedOnly">Verified</label>
+                </div>
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary btn-sm w-100">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- ?? Result count ?? -->
+<p class="text-muted small mb-3">
+    <strong>@Model.Workers.Count</strong> worker(s) found
+    @if (Model.VerifiedOnly){ <span class="badge bg-success ms-1"><i class="bi bi-shield-check"></i> Verified only</span> }
+</p>
+
+@if (!Model.Workers.Any())
+{
+    <div class="alert alert-info">No workers found matching your criteria. Try relaxing the filters.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var summary in Model.Workers)
+        {
+            var w = summary.Worker;
+            <div class="col">
+                <div class="card h-100 shadow-sm worker-card">
+                    <div class="card-body">
+                        <!-- Header row -->
+                        <div class="d-flex align-items-center mb-2">
+                            @{
+                                var initials = string.Join("", w.FullName.Split(' ').Take(2).Select(p => p.Length > 0 ? p[0].ToString().ToUpper() : ""));
+                                var avatarColors = new[] { "#0d6efd","#198754","#dc3545","#fd7e14","#6f42c1","#0dcaf0","#20c997" };
+                                var avatarColor  = avatarColors[Math.Abs(w.FullName.GetHashCode()) % avatarColors.Length];
+                            }
+                            @if (!string.IsNullOrEmpty(w.PhotoUrl) && !w.PhotoUrl.Contains("placeholder"))
+                            {
+                                <img src="@w.PhotoUrl"
+                                     class="rounded-circle me-2 flex-shrink-0"
+                                     width="48" height="48"
+                                     style="object-fit:cover"
+                                     alt="@w.FullName"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                <div class="rounded-circle me-2 flex-shrink-0 d-none align-items-center justify-content-center text-white fw-bold"
+                                     style="width:48px;height:48px;background:@avatarColor;font-size:1rem">@initials</div>
+                            }
+                            else
+                            {
+                                <div class="rounded-circle me-2 flex-shrink-0 d-flex align-items-center justify-content-center text-white fw-bold"
+                                     style="width:48px;height:48px;background:@avatarColor;font-size:1rem">@initials</div>
+                            }
+                            <div class="overflow-hidden">
+                                <h6 class="mb-0 text-truncate">@w.FullName</h6>
+                                <small class="text-muted">@w.SkillCategory.Name</small>
+                            </div>
+                        </div>
+
+                        <!-- Star rating row -->
+                        <div class="mb-2">
+                            @if (summary.ReviewCount > 0)
+                            {
+                                @Html.Raw(Stars(summary.AverageRating, summary.ReviewCount))
+                                <span class="ms-1 text-muted" style="font-size:.8rem">
+                                    @summary.AverageRating.ToString("0.0")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted" style="font-size:.8rem">No reviews yet</span>
+                            }
+                        </div>
+
+                        <!-- Detail pills -->
+                        <ul class="list-unstyled small mb-2">
+                            <li><i class="bi bi-geo-alt me-1 text-primary"></i>@(w.LocationCity ?? "N/A"), @(w.LocationState ?? "")</li>
+                            <li><i class="bi bi-briefcase me-1 text-primary"></i>@w.YearsOfExperience yr(s) experience</li>
+                            <li><i class="bi bi-cash me-1 text-primary"></i>&#8377;@w.ExpectedDailyWage / day</li>
+                            <li>
+                                <i class="bi bi-check2-circle me-1 text-success"></i>
+                                <strong>@summary.CompletedJobCount</strong> job(s) completed
+                            </li>
+                            <li class="mt-1">
+                                @if (w.KycStatus == VerificationStatus.Verified)
+                                {
+                                    <span class="badge bg-success"><i class="bi bi-shield-check"></i> Verified</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Unverified</span>
+                                }
+                                @if (w.IsAvailable)
+                                {
+                                    <span class="badge bg-primary ms-1">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger ms-1">Unavailable</span>
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent d-flex gap-2">
+                        <a asp-page="/Workers/Profile" asp-route-id="@w.Id"
+                           class="btn btn-outline-primary btn-sm flex-grow-1">View Profile</a>
+                        @if (User.Identity?.IsAuthenticated == true && !User.IsInRole("Worker"))
+                        {
+                            <a asp-page="/Account/Book" asp-route-workerId="@w.Id"
+                               class="btn btn-primary btn-sm flex-grow-1">Book</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+<style>
+    .worker-card { transition: transform .15s, box-shadow .15s; }
+    .worker-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.12) !important; }
+</style>
+}

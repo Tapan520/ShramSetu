@@ -1,0 +1,80 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero -->
+<div class="px-4 py-5 my-3 text-center bg-primary text-white rounded-3">
+    <i class="bi bi-people-fill display-4"></i>
+    <h1 class="display-5 fw-bold mt-2">ShramSetu</h1>
+    <p class="col-lg-8 mx-auto lead">
+        Connecting skilled unorganised-sector workers with individuals, companies and contractors across India.
+    </p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3">
+        <a asp-page="/Workers/Index" class="btn btn-light btn-lg px-4">
+            <i class="bi bi-search me-1"></i> Find a Worker
+        </a>
+        <a asp-page="/Register/Worker" class="btn btn-outline-light btn-lg px-4">
+            <i class="bi bi-person-plus me-1"></i> Register as Worker
+        </a>
+    </div>
+</div>
+
+<!-- Skill categories -->
+<section class="my-5">
+    <h2 class="text-center mb-4">Browse by Skill</h2>
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3 justify-content-center">
+        @foreach (var cat in Model.Categories)
+        {
+            <div class="col">
+                <a asp-page="/Workers/Index" asp-route-skillCategoryId="@cat.Id"
+                   class="text-decoration-none">
+                    <div class="card h-100 text-center shadow-sm border-0 skill-card">
+                        <div class="card-body py-4">
+                            <i class="@cat.IconCssClass fs-1 text-primary"></i>
+                            <p class="card-text fw-semibold mt-2 mb-0">@cat.Name</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="my-5">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <i class="bi bi-person-check fs-1 text-success"></i>
+            <h5 class="mt-2">Worker Registers</h5>
+            <p class="text-muted">Workers sign up, upload documents and get verified by our admin team.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-search fs-1 text-primary"></i>
+            <h5 class="mt-2">Employer Searches</h5>
+            <p class="text-muted">Filter by skill, location, experience and wage to find the right person.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-handshake fs-1 text-warning"></i>
+            <h5 class="mt-2">Connect & Hire</h5>
+            <p class="text-muted">Contact directly or raise a sourcing request and let us find the right match.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Concierge CTA -->
+<div class="p-4 my-4 bg-light rounded-3 text-center">
+    <h4><i class="bi bi-headset me-2"></i>Need workers arranged for you?</h4>
+    <p class="text-muted">Our concierge team will source, vet and deliver the right workers for your project.</p>
+    <a asp-page="/Sourcing/New" class="btn btn-primary">
+        Raise a Sourcing Request
+    </a>
+</div>
+
+@section Scripts {
+<style>
+    .skill-card:hover { background-color: #f0f4ff; transform: translateY(-2px); transition: .2s; }
+</style>
+}

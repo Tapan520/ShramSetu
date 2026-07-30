@@ -1,0 +1,83 @@
+﻿@page
+@model ShramSetu.Pages.Jobs.PostModel
+@{
+    ViewData["Title"] = "Post a Job";
+}
+
+<h2 class="mb-4"><i class="bi bi-plus-circle me-2"></i>Post a Job</h2>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Title" class="form-label"></label>
+                <input asp-for="Input.Title" class="form-control" placeholder="e.g. Plumber needed for 2-week project" />
+                <span asp-validation-for="Input.Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.SkillCategoryId" class="form-label">Skill Required</label>
+                <select asp-for="Input.SkillCategoryId" asp-items="Model.SkillCategoryOptions" class="form-select">
+                    <option value=""> Select </option>
+                </select>
+                <span asp-validation-for="Input.SkillCategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Description" class="form-label"></label>
+                <textarea asp-for="Input.Description" rows="4" class="form-control"
+                          placeholder="Describe the work, requirements, timings"></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.LocationCity" class="form-label"></label>
+                    <input asp-for="Input.LocationCity" class="form-control" placeholder="e.g. Pune" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.LocationState" class="form-label"></label>
+                    <input asp-for="Input.LocationState" class="form-control" placeholder="e.g. Maharashtra" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.DailyWage" class="form-label"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">&#8377;</span>
+                        <input asp-for="Input.DailyWage" type="number" min="0" class="form-control" />
+                    </div>
+                    <span asp-validation-for="Input.DailyWage" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.DurationDays" class="form-label"></label>
+                    <input asp-for="Input.DurationDays" type="number" min="1" class="form-control" />
+                    <span asp-validation-for="Input.DurationDays" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Input.VacancyCount" class="form-label"></label>
+                    <input asp-for="Input.VacancyCount" type="number" min="1" class="form-control" />
+                    <span asp-validation-for="Input.VacancyCount" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.StartDate" class="form-label"></label>
+                <input asp-for="Input.StartDate" type="date" class="form-control"
+                       min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-send me-1"></i> Post Job
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

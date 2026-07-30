@@ -1,0 +1,83 @@
+@page
+@model ShramSetu.Pages.Account.NotificationsModel
+@{ ViewData["Title"] = "Notifications"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-bell me-2"></i>Notifications
+        @if (Model.UnreadCount > 0)
+        {
+            <span class="badge bg-danger ms-2">@Model.UnreadCount</span>
+        }
+    </h2>
+    @if (Model.Notifications.Any())
+    {
+        <form method="post" asp-page-handler="MarkAllRead">
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-check-all me-1"></i>Mark all read
+            </button>
+        </form>
+    }
+</div>
+
+@if (!Model.Notifications.Any())
+{
+    <div class="text-center py-5">
+        <i class="bi bi-bell-slash text-muted" style="font-size:4rem"></i>
+        <p class="text-muted mt-3">No notifications yet.</p>
+    </div>
+}
+else
+{
+    <div class="list-group shadow-sm">
+        @foreach (var n in Model.Notifications)
+        {
+            <div class="list-group-item list-group-item-action @(!n.IsRead ? "list-group-item-light border-start border-primary border-3" : "")">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold @(!n.IsRead ? "text-primary" : "")">
+                            @if (!n.IsRead) { <i class="bi bi-circle-fill text-primary me-1" style="font-size:8px;vertical-align:middle"></i> }
+                            @n.Title
+                        </div>
+                        <p class="mb-1 text-muted small">@n.Message</p>
+                        @if (!string.IsNullOrEmpty(n.ActionUrl))
+                        {
+                            <a href="@n.ActionUrl" class="btn btn-sm btn-outline-primary mt-1">View ?</a>
+                        }
+                    </div>
+                    <small class="text-muted ms-3 text-nowrap">
+                        @n.CreatedAt.ToLocalTime().ToString("dd MMM HH:mm")
+                    </small>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/hubs/notifications")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on("ReceiveNotification", (data) => {
+        // Show toast
+        const toast = document.createElement('div');
+        toast.className = 'toast align-items-center text-white bg-primary border-0 position-fixed top-0 end-0 m-3';
+        toast.style.zIndex = 9999;
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body"><strong>${data.title}</strong><br>${data.message}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>`;
+        document.body.appendChild(toast);
+        new bootstrap.Toast(toast, { delay: 5000 }).show();
+        // Update badge
+        const badge = document.querySelector('.badge.bg-danger');
+        if (badge) badge.textContent = parseInt(badge.textContent || '0') + 1;
+    });
+
+    connection.start().catch(err => console.warn('Notification hub:', err));
+</script>
+}

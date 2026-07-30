@@ -1,0 +1,39 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-1"><i class="bi bi-person-plus text-primary me-2"></i>Create Account</h2>
+                <p class="text-center text-muted mb-4">Choose your registration type below</p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <a asp-page="/Register/Worker"
+                           class="btn btn-outline-primary w-100 py-3">
+                            <i class="bi bi-person-arms-up d-block fs-2 mb-1"></i>
+                            Register as Worker
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a asp-page="/Register/Employer"
+                           class="btn btn-outline-success w-100 py-3">
+                            <i class="bi bi-building d-block fs-2 mb-1"></i>
+                            Register as Employer
+                        </a>
+                    </div>
+                </div>
+
+                <hr />
+                <p class="text-center text-muted small">
+                    Already have an account?
+                    <a asp-page="./Login" class="ms-1">Sign in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

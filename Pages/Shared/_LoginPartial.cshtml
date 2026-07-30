@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@* 
+   This partial is required by ASP.NET Core Identity UI.
+   Our main navigation is in _Layout.cshtml, so this partial is intentionally minimal.
+   Identity UI calls it from its own internal layout  it must exist and be valid.
+*@
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="" asp-page="/Index">
+            <i class="bi bi-person-circle me-1"></i>@UserManager.GetUserName(User)
+        </a>
+    </li>
+    <li class="nav-item">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+              asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post">
+            <button type="submit" class="nav-link btn btn-link text-white px-0">
+                <i class="bi bi-box-arrow-right me-1"></i>Logout
+            </button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">
+            <i class="bi bi-person-plus me-1"></i>Register
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">
+            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+        </a>
+    </li>
+}

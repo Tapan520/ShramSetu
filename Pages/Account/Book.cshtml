@@ -1,0 +1,89 @@
+﻿@page "{workerId:guid}"
+@model ShramSetu.Pages.Account.BookModel
+@{
+    ViewData["Title"] = Model.Worker is not null ? $"Book {Model.Worker.FullName}" : "Book Worker";
+}
+
+@if (Model.Worker is null)
+{
+    <div class="alert alert-warning">Worker not found.</div>
+}
+else
+{
+    <h2 class="mb-4"><i class="bi bi-calendar-plus me-2"></i>Book @Model.Worker.FullName</h2>
+
+    <div class="row">
+        <!-- Worker summary -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.Worker.PhotoUrl))
+                    {
+                        <img src="@Model.Worker.PhotoUrl" class="rounded-circle mb-2" width="80" height="80"
+                             style="object-fit:cover" alt="photo" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-person-circle text-secondary" style="font-size:4rem"></i>
+                    }
+                    <h5 class="mb-1">@Model.Worker.FullName</h5>
+                    <p class="text-muted mb-1">@Model.Worker.SkillCategory.Name</p>
+                    <p class="mb-1"><i class="bi bi-geo-alt me-1"></i>@(Model.Worker.LocationCity ?? "")</p>
+                    <p class="mb-0"><i class="bi bi-cash me-1"></i>&#8377;@Model.Worker.ExpectedDailyWage / day</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking form -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="Input.WorkerId" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.StartDate" class="form-label"></label>
+                                <input asp-for="Input.StartDate" type="date" class="form-control"
+                                       min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.DurationDays" class="form-label"></label>
+                                <input asp-for="Input.DurationDays" type="number" min="1" class="form-control" />
+                                <span asp-validation-for="Input.DurationDays" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.AgreedWage" class="form-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">?</span>
+                                <input asp-for="Input.AgreedWage" type="number" min="0" class="form-control"
+                                       value="@Model.Worker.ExpectedDailyWage" />
+                                <span class="input-group-text">/ day</span>
+                            </div>
+                            <small class="text-muted">Worker's expected: &#8377;@Model.Worker.ExpectedDailyWage / day</small>
+                            <span asp-validation-for="Input.AgreedWage" class="text-danger d-block"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Notes" class="form-label"></label>
+                            <textarea asp-for="Input.Notes" rows="3" class="form-control"
+                                      placeholder="Work location, special instructions, timings"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-circle me-1"></i> Confirm Booking Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

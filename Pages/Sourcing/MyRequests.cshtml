@@ -1,0 +1,68 @@
+﻿@page
+@model ShramSetu.Pages.Sourcing.MyRequestsModel
+@{
+    ViewData["Title"] = "My Sourcing Requests";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-card-checklist me-2"></i>My Sourcing Requests</h2>
+    <a asp-page="/Sourcing/New" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> New Request
+    </a>
+</div>
+
+@if (!Model.Requests.Any())
+{
+    <div class="alert alert-info">
+        You have no sourcing requests yet.
+        <a asp-page="/Sourcing/New">Raise one now</a>.
+    </div>
+}
+else
+{
+    @foreach (var req in Model.Requests)
+    {
+        var (border, icon) = req.Status switch
+        {
+            SourcingStatus.Fulfilled   => ("border-success", "bi-check-circle-fill text-success"),
+            SourcingStatus.InProgress  => ("border-warning",  "bi-hourglass-split text-warning"),
+            SourcingStatus.Cancelled   => ("border-danger",   "bi-x-circle-fill text-danger"),
+            _                          => ("border-primary",  "bi-clock text-primary")
+        };
+        <div class="card mb-3 shadow-sm @border" style="border-left-width:4px !important">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="mb-1">
+                            <i class="bi @icon me-2"></i>@req.SkillCategory.Name
+                        </h5>
+                        <p class="text-muted mb-1 small">
+                            @req.WorkerCount worker(s)  @req.DurationDays day(s)  &#8377;@req.BudgetPerDay/day 
+                            @(req.LocationCity ?? ""), @(req.LocationState ?? "")
+                        </p>
+                        <p class="mb-1">@req.Description</p>
+                        @if (!string.IsNullOrEmpty(req.AdminNotes))
+                        {
+                            <div class="alert alert-light border mt-2 mb-0 py-2">
+                                <strong><i class="bi bi-info-circle me-1"></i>Admin Update:</strong>
+                                @req.AdminNotes
+                            </div>
+                        }
+                    </div>
+                    <div class="text-end ms-3 text-nowrap">
+                        <span class="badge @(req.Status == SourcingStatus.Fulfilled ? "bg-success" :
+                                             req.Status == SourcingStatus.InProgress ? "bg-warning text-dark" :
+                                             req.Status == SourcingStatus.Cancelled ? "bg-danger" : "bg-primary")">
+                            @req.Status
+                        </span>
+                        <div class="text-muted small mt-1">@req.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</div>
+                        @if (req.FulfilledAt.HasValue)
+                        {
+                            <div class="text-success small">Fulfilled @req.FulfilledAt.Value.ToLocalTime().ToString("dd MMM")</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

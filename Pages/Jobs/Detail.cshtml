@@ -1,0 +1,99 @@
+﻿@page "{id:guid}"
+@model ShramSetu.Pages.Jobs.DetailModel
+@{
+    ViewData["Title"] = Model.Job?.Title ?? "Job Detail";
+}
+
+@if (Model.Job is null)
+{
+    <div class="alert alert-warning">Job not found.</div>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h3 class="mb-1">@Model.Job.Title</h3>
+                            <p class="text-muted mb-1">
+                                <i class="bi bi-building me-1"></i>@Model.Job.Employer.Name
+                                &nbsp;&nbsp;
+                                <span class="badge bg-primary">@Model.Job.SkillCategory.Name</span>
+                                &nbsp;&nbsp;
+                                <span class="badge @(Model.Job.Status == ShramSetu.Core.Enums.JobPostStatus.Open ? "bg-success" : "bg-secondary")">
+                                    @Model.Job.Status
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Location</dt>
+                        <dd class="col-sm-8">@(Model.Job.LocationCity ?? ""), @(Model.Job.LocationState ?? "")</dd>
+                        <dt class="col-sm-4">Daily Wage</dt>
+                        <dd class="col-sm-8">&#8377;@Model.Job.DailyWage</dd>
+                        <dt class="col-sm-4">Duration</dt>
+                        <dd class="col-sm-8">@Model.Job.DurationDays day(s)</dd>
+                        <dt class="col-sm-4">Start Date</dt>
+                        <dd class="col-sm-8">@Model.Job.StartDate.ToString("dd MMM yyyy")</dd>
+                        <dt class="col-sm-4">Vacancies</dt>
+                        <dd class="col-sm-8">@Model.Job.VacancyCount</dd>
+                        <dt class="col-sm-4">Applications</dt>
+                        <dd class="col-sm-8">@Model.ApplicationCount</dd>
+                        <dt class="col-sm-4">Posted</dt>
+                        <dd class="col-sm-8">@Model.Job.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold">Job Description</div>
+                <div class="card-body">
+                    <p class="mb-0" style="white-space:pre-line">@Model.Job.Description</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    @if (User.IsInRole("Worker"))
+                    {
+                        if (Model.AlreadyApplied)
+                        {
+                            <div class="alert alert-success mb-0">
+                                <i class="bi bi-check-circle me-1"></i>
+                                You have already applied. Status: <strong>@Model.MyApplicationStatus</strong>
+                            </div>
+                        }
+                        else if (Model.Job.Status == ShramSetu.Core.Enums.JobPostStatus.Open)
+                        {
+                            <a asp-page="/Jobs/Apply" asp-route-id="@Model.Job.Id"
+                               class="btn btn-primary w-100 mb-2">
+                                <i class="bi bi-send me-1"></i> Apply Now
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="alert alert-secondary mb-0">This job is no longer accepting applications.</div>
+                        }
+                    }
+                    else if (!User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary w-100">
+                            Login to Apply
+                        </a>
+                    }
+                    else if (User.IsInRole("Employer") || User.IsInRole("Admin"))
+                    {
+                        <a asp-page="/Jobs/Applications" asp-route-id="@Model.Job.Id"
+                           class="btn btn-outline-primary w-100">
+                            <i class="bi bi-people me-1"></i> View Applications (@Model.ApplicationCount)
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

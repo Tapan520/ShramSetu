@@ -1,0 +1,65 @@
+﻿@page
+@model ShramSetu.Pages.Employer.SavedWorkersModel
+@{
+    ViewData["Title"] = "Saved Workers";
+}
+
+<h2 class="mb-4"><i class="bi bi-bookmark-heart me-2"></i>Saved Workers</h2>
+
+@if (!Model.Saved.Any())
+{
+    <div class="alert alert-info">
+        You haven't saved any workers yet.
+        <a asp-page="/Workers/Index">Browse workers</a> and click the bookmark icon to save them.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model.Saved)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            @if (!string.IsNullOrEmpty(item.Worker.PhotoUrl))
+                            {
+                                <img src="@item.Worker.PhotoUrl" class="rounded-circle me-2"
+                                     width="48" height="48" style="object-fit:cover" alt="" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-person-circle fs-1 me-2 text-secondary"></i>
+                            }
+                            <div>
+                                <h6 class="mb-0">@item.Worker.FullName</h6>
+                                <small class="text-muted">@item.Worker.SkillCategory.Name</small>
+                            </div>
+                        </div>
+                        <ul class="list-unstyled small mb-2">
+                            <li><i class="bi bi-geo-alt me-1 text-primary"></i>@(item.Worker.LocationCity ?? "")</li>
+                            <li><i class="bi bi-cash me-1 text-primary"></i>&#8377;@item.Worker.ExpectedDailyWage / day</li>
+                            @if (!string.IsNullOrEmpty(item.Note))
+                            {
+                                <li><i class="bi bi-sticky me-1 text-warning"></i>@item.Note</li>
+                            }
+                        </ul>
+                        <p class="text-muted" style="font-size:.75rem">Saved @item.SavedAt.ToLocalTime().ToString("dd MMM yyyy")</p>
+                    </div>
+                    <div class="card-footer bg-transparent d-flex gap-2">
+                        <a asp-page="/Workers/Profile" asp-route-id="@item.Worker.Id"
+                           class="btn btn-outline-primary btn-sm flex-grow-1">Profile</a>
+                        <a asp-page="/Account/Book" asp-route-workerId="@item.Worker.Id"
+                           class="btn btn-primary btn-sm flex-grow-1">Book</a>
+                        <form method="post">
+                            <input type="hidden" name="workerId" value="@item.Worker.Id" />
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-bookmark-x"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

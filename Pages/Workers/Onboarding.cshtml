@@ -1,0 +1,105 @@
+﻿@page
+@model ShramSetu.Pages.Workers.OnboardingModel
+@{
+    ViewData["Title"] = "Complete Your Profile";
+    int step = Model.CurrentStep;
+}
+
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-7">
+        <h3 class="mb-1"><i class="bi bi-hand-wave me-2 text-warning"></i>Welcome! Let's set up your profile</h3>
+        <p class="text-muted mb-3">Complete all 5 steps to start receiving job offers.</p>
+
+        <!-- Progress Bar -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between small mb-1">
+                <span>Step @step of 5</span>
+                <span>@(step * 20)% complete</span>
+            </div>
+            <div class="progress" style="height:10px;">
+                <div class="progress-bar bg-success" style="width:@(step * 20)%"></div>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+                @foreach (var (lbl, i) in new[] { ("Photo",1),("Skills",2),("Location",3),("Docs",4),("Bank",5) })
+                {
+                    <small class="@(step >= i ? "text-success fw-semibold" : "text-muted")">@lbl</small>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                @if (step == 1)
+                {
+                    <h5><i class="bi bi-camera me-2 text-primary"></i>Step 1  Upload Your Photo</h5>
+                    <p class="text-muted">A clear face photo builds trust with employers.</p>
+                    <form method="post" asp-page-handler="Photo" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Profile Photo</label>
+                            <input type="file" name="photo" class="form-control" accept="image/*" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Next <i class="bi bi-arrow-right ms-1"></i></button>
+                    </form>
+                }
+                else if (step == 2)
+                {
+                    <h5><i class="bi bi-tools me-2 text-primary"></i>Step 2  Your Skills</h5>
+                    <form method="post" asp-page-handler="Skills">
+                        <div class="mb-3">
+                            <label class="form-label">Primary Skill</label>
+                            <select asp-for="Input.SkillCategoryId" class="form-select" required>
+                                <option value="">-- Select Skill --</option>
+                                @foreach (var s in Model.SkillCategories)
+                                {
+                                    <option value="@s.Id">@s.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Years of Experience</label>
+                            <input asp-for="Input.YearsOfExperience" type="number" min="0" max="50" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                        <label class="form-label">Expected Daily Wage (&#8377;)</label>
+                            <input asp-for="Input.ExpectedDailyWage" type="number" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Next <i class="bi bi-arrow-right ms-1"></i></button>
+                    </form>
+                }
+                else if (step == 3)
+                {
+                    <h5><i class="bi bi-geo-alt me-2 text-primary"></i>Step 3  Your Location</h5>
+                    <form method="post" asp-page-handler="Location">
+                        <div class="mb-3">
+                            <label class="form-label">City</label>
+                            <input asp-for="Input.LocationCity" class="form-control" placeholder="e.g. Mumbai" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">State</label>
+                            <input asp-for="Input.LocationState" class="form-control" placeholder="e.g. Maharashtra" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Next <i class="bi bi-arrow-right ms-1"></i></button>
+                    </form>
+                }
+                else if (step == 4)
+                {
+                    <h5><i class="bi bi-file-earmark-text me-2 text-primary"></i>Step 4  Upload Documents</h5>
+                    <p class="text-muted">Upload Aadhaar or any government ID for KYC verification.</p>
+                    <a asp-page="/Workers/MyProfile" class="btn btn-primary w-100">Upload via My Profile <i class="bi bi-arrow-right ms-1"></i></a>
+                    <a asp-page-handler="SkipDocs" asp-page="/Workers/Onboarding" class="btn btn-link w-100 mt-1">Skip for now</a>
+                }
+                else if (step == 5)
+                {
+                    <h5><i class="bi bi-bank me-2 text-primary"></i>Step 5  Bank / UPI Details</h5>
+                    <p class="text-muted">Add your UPI or bank account to receive payments directly.</p>
+                    <a asp-page="/Workers/Wallet" class="btn btn-primary w-100">Set Up Wallet <i class="bi bi-arrow-right ms-1"></i></a>
+                    <form method="post" asp-page-handler="Complete">
+                        <button type="submit" class="btn btn-success w-100 mt-2">
+                            <i class="bi bi-check-circle me-1"></i> Mark as Complete
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

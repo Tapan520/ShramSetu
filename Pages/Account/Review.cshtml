@@ -1,0 +1,86 @@
+﻿@page "{bookingId:guid}"
+@model ShramSetu.Pages.Account.ReviewModel
+@{
+    ViewData["Title"] = "Leave a Review";
+}
+
+@if (Model.Booking is null)
+{
+    <div class="alert alert-warning">Booking not found.</div>
+}
+else
+{
+    <h2 class="mb-4"><i class="bi bi-star me-2"></i>Review @Model.Booking.Worker.FullName</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-person-circle text-secondary" style="font-size:3.5rem"></i>
+                        <h5 class="mt-2">@Model.Booking.Worker.FullName</h5>
+                        <p class="text-muted">@Model.Booking.Worker.SkillCategory.Name</p>
+                    </div>
+
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="Input.BookingId" />
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Rating</label>
+                            <div class="d-flex gap-2 fs-2" id="starContainer">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="bi bi-star star-btn text-secondary" data-value="@i"
+                                       style="cursor:pointer"></i>
+                                }
+                            </div>
+                            <input type="hidden" asp-for="Input.Rating" id="ratingInput" />
+                            <span asp-validation-for="Input.Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Comment" class="form-label"></label>
+                            <textarea asp-for="Input.Comment" rows="4" class="form-control"
+                                      placeholder="Share your experience with this worker"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100">
+                            <i class="bi bi-star-fill me-1"></i> Submit Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const stars = document.querySelectorAll('.star-btn');
+        const ratingInput = document.getElementById('ratingInput');
+
+        function highlightStars(val) {
+            stars.forEach(s => {
+                const v = parseInt(s.dataset.value);
+                s.classList.toggle('bi-star-fill', v <= val);
+                s.classList.toggle('text-warning', v <= val);
+                s.classList.toggle('bi-star', v > val);
+                s.classList.toggle('text-secondary', v > val);
+            });
+        }
+
+        stars.forEach(s => {
+            s.addEventListener('click', () => {
+                ratingInput.value = s.dataset.value;
+                highlightStars(parseInt(s.dataset.value));
+            });
+            s.addEventListener('mouseover', () => highlightStars(parseInt(s.dataset.value)));
+        });
+
+        document.getElementById('starContainer').addEventListener('mouseleave', () => {
+            highlightStars(parseInt(ratingInput.value) || 0);
+        });
+    </script>
+}

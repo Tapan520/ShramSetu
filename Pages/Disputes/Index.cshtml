@@ -1,0 +1,45 @@
+﻿@page
+@model ShramSetu.Pages.Disputes.IndexModel
+@{
+    ViewData["Title"] = "My Disputes";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-shield-exclamation me-2 text-danger"></i>Disputes</h2>
+    <a asp-page="/Disputes/New" class="btn btn-danger">
+        <i class="bi bi-plus-circle me-1"></i> Raise Dispute
+    </a>
+</div>
+@if (!Model.Disputes.Any())
+{
+    <div class="alert alert-info">No disputes raised yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr><th>Title</th><th>Type</th><th>Status</th><th>Raised</th><th>Resolved</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var d in Model.Disputes)
+                {
+                    var badge = d.Status switch
+                    {
+                        Core.Enums.DisputeStatus.Open        => "bg-warning text-dark",
+                        Core.Enums.DisputeStatus.UnderReview => "bg-info text-dark",
+                        Core.Enums.DisputeStatus.Resolved    => "bg-success",
+                        _                                    => "bg-secondary"
+                    };
+                    <tr>
+                        <td>@d.Title</td>
+                        <td>@d.Type</td>
+                        <td><span class="badge @badge">@d.Status</span></td>
+                        <td>@d.CreatedAt.ToLocalTime().ToString("dd MMM yy")</td>
+                        <td>@(d.ResolvedAt?.ToLocalTime().ToString("dd MMM yy") ?? "")</td>
+                        <td><a asp-page="/Disputes/Detail" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

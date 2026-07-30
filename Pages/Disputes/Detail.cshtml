@@ -1,0 +1,109 @@
+@page "{id:guid}"
+@model ShramSetu.Pages.Disputes.DetailModel
+@{ ViewData["Title"] = "Dispute Details"; }
+
+@if (Model.Dispute is null)
+{
+    <div class="alert alert-warning">Dispute not found.</div>
+}
+else
+{
+    var d = Model.Dispute;
+    var statusBadge = d.Status switch
+    {
+        ShramSetu.Core.Enums.DisputeStatus.Open        => "bg-warning text-dark",
+        ShramSetu.Core.Enums.DisputeStatus.UnderReview => "bg-info text-dark",
+        ShramSetu.Core.Enums.DisputeStatus.Resolved    => "bg-success",
+        _                                              => "bg-secondary"
+    };
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-shield-exclamation me-2 text-danger"></i>Dispute Details</h2>
+        <a asp-page="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>@d.Title</strong>
+                    <span class="badge @statusBadge">@d.Status</span>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">Type</dt>
+                        <dd class="col-sm-9">@d.Type</dd>
+                        <dt class="col-sm-3">Raised</dt>
+                        <dd class="col-sm-9">@d.CreatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</dd>
+                        @if (d.BookingId.HasValue)
+                        {
+                            <dt class="col-sm-3">Booking</dt>
+                            <dd class="col-sm-9"><code>@d.BookingId</code></dd>
+                        }
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9" style="white-space:pre-line">@d.Description</dd>
+                        @if (!string.IsNullOrWhiteSpace(d.AdminNotes))
+                        {
+                            <dt class="col-sm-3">Admin Notes</dt>
+                            <dd class="col-sm-9">@d.AdminNotes</dd>
+                        }
+                        @if (d.Status == ShramSetu.Core.Enums.DisputeStatus.Resolved)
+                        {
+                            <dt class="col-sm-3">Resolution</dt>
+                            <dd class="col-sm-9 text-success">@d.Resolution</dd>
+                            <dt class="col-sm-3">Resolved On</dt>
+                            <dd class="col-sm-9">@d.ResolvedAt?.ToLocalTime().ToString("dd MMM yyyy")</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            @if (d.Evidence.Any())
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header fw-semibold">Evidence Submitted</div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var ev in d.Evidence)
+                        {
+                            <li class="list-group-item">
+                                <i class="bi bi-paperclip me-1 text-muted"></i>
+                                @if (!string.IsNullOrWhiteSpace(ev.FileUrl))
+                                {
+                                    <a href="@ev.FileUrl" target="_blank">@ev.Description</a>
+                                }
+                                else
+                                {
+                                    @ev.Description
+                                }
+                                <small class="text-muted ms-2">@ev.SubmittedAt.ToLocalTime().ToString("dd MMM yy")</small>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+
+        @if (User.IsInRole("Admin") && d.Status != ShramSetu.Core.Enums.DisputeStatus.Resolved)
+        {
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-dark fw-semibold">Admin: Resolve Dispute</div>
+                    <div class="card-body">
+                        <form method="post" asp-page-handler="Resolve" asp-route-id="@d.Id">
+                            <div class="mb-3">
+                                <label class="form-label">Resolution Summary</label>
+                                <textarea name="resolution" rows="4" required minlength="10"
+                                          class="form-control" placeholder="Describe the outcome and any action taken..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">
+                                <i class="bi bi-check2-circle me-1"></i> Mark Resolved
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

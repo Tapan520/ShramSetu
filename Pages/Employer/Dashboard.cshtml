@@ -1,0 +1,90 @@
+@page
+@model ShramSetu.Pages.Employer.DashboardModel
+@{
+    ViewData["Title"] = "Employer Dashboard";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-building me-2"></i>Welcome, @Model.EmployerName</h2>
+    <a asp-page="/Jobs/Post" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Post a Job</a>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    @{
+        var cards = new[]
+        {
+            ("Active Bookings",   Model.ActiveBookings.ToString(),    "bg-primary",  "bi-calendar2-check"),
+            ("Open Job Posts",    Model.OpenJobPosts.ToString(),      "bg-success",  "bi-briefcase"),
+            ("Pending Apps",      Model.PendingApplications.ToString(),"bg-warning text-dark","bi-file-earmark-person"),
+            ("Saved Workers",     Model.SavedWorkerCount.ToString(),  "bg-info",     "bi-bookmark-heart"),
+            ("Total Spent",       "&#8377;"+Model.TotalSpent.ToString("N0"),"bg-secondary","bi-currency-rupee"),
+            ("Subscription",      Model.SubscriptionTier,             "bg-dark",     "bi-gem"),
+        };
+    }
+    @foreach (var (label, value, bg, icon) in cards)
+    {
+        <div class="col-6 col-md-2">
+            <div class="card text-white @bg shadow-sm">
+                <div class="card-body text-center py-3">
+                    <i class="bi @icon fs-3 mb-1 d-block opacity-75"></i>
+                    <div class="fw-bold fs-5">@Html.Raw(value)</div>
+                    <small>@label</small>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row g-4">
+    <!-- Active Bookings -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold d-flex justify-content-between">
+                <span><i class="bi bi-calendar2-check me-1"></i>Active Bookings</span>
+                <a asp-page="/Account/Bookings" class="btn btn-sm btn-outline-primary">All</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var b in Model.RecentBookings)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div><strong>@b.WorkerName</strong><small class="text-muted ms-2">@b.SkillCategory</small></div>
+                        <span class="badge @(b.Status == "InProgress" ? "bg-success" : "bg-primary")">@b.Status</span>
+                    </li>
+                }
+                @if (!Model.RecentBookings.Any()) { <li class="list-group-item text-muted">No active bookings.</li> }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold d-flex justify-content-between">
+                <span><i class="bi bi-file-earmark-person me-1"></i>Recent Applications</span>
+                <a asp-page="/Jobs/Applications" class="btn btn-sm btn-outline-primary">All</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var a in Model.RecentApplications)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div><strong>@a.WorkerName</strong><small class="text-muted ms-2">@a.JobTitle</small></div>
+                        <span class="badge bg-secondary">@a.Status</span>
+                    </li>
+                }
+                @if (!Model.RecentApplications.Any()) { <li class="list-group-item text-muted">No new applications.</li> }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header fw-semibold"><i class="bi bi-lightning me-1"></i>Quick Actions</div>
+    <div class="card-body d-flex flex-wrap gap-2">
+        <a asp-page="/Jobs/Post" class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i>Post New Job</a>
+        <a asp-page="/Employer/SavedWorkers" class="btn btn-outline-secondary"><i class="bi bi-bookmark-heart me-1"></i>Saved Workers</a>
+        <a asp-page="/Sourcing/New" class="btn btn-outline-success"><i class="bi bi-headset me-1"></i>Request Workers</a>
+        <a asp-page="/Employer/Plans" class="btn btn-outline-warning"><i class="bi bi-gem me-1"></i>Upgrade Plan</a>
+        <a asp-page="/Disputes/Index" class="btn btn-outline-danger"><i class="bi bi-shield-exclamation me-1"></i>Disputes</a>
+    </div>
+</div>
