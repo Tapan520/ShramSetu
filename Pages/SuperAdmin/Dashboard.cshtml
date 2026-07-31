@@ -1,0 +1,115 @@
+@page
+@model ShramSetu.Pages.SuperAdmin.DashboardModel
+@{ ViewData["Title"] = "SuperAdmin Dashboard"; }
+
+<div class="ss-page-header">
+    <h3><i class="bi bi-shield-fill-check text-warning me-2"></i>SuperAdmin Dashboard</h3>
+    <p class="text-muted mb-0">Full platform overview and live session monitoring</p>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    @foreach (var (label, val, icon, color) in new[]{
+        ("Total Users",    Model.TotalUsers.ToString(),    "bi-people-fill",      "#2563eb"),
+        ("Admins",         Model.TotalAdmins.ToString(),   "bi-shield-lock-fill", "#dc2626"),
+        ("Employers",      Model.TotalEmployers.ToString(),"bi-building",         "#059669"),
+        ("Workers",        Model.TotalWorkers.ToString(),  "bi-person-arms-up",   "#d97706"),
+        ("Online Now",     Model.OnlineNow.ToString(),     "bi-circle-fill",      "#10b981"),
+    })
+    {
+        <div class="col-6 col-md">
+            <div class="card border-0 text-center py-3 px-2 shadow-sm">
+                <i class="bi @icon fs-2 mb-1" style="color:@color"></i>
+                <div class="fw-bold fs-5">@val</div>
+                <div class="text-muted small">@label</div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Active Sessions -->
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-activity me-2"></i>Currently Logged-In Users</span>
+        <span class="badge bg-success">@Model.OnlineNow online</span>
+    </div>
+    @if (!Model.ActiveSessions.Any())
+    {
+        <div class="card-body text-muted">No active sessions right now.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>IP Address</th>
+                        <th>Login Time</th>
+                        <th>Last Active</th>
+                        <th>Browser / Device</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.ActiveSessions)
+                    {
+                        var roleBadge = s.Role switch {
+                            "SuperAdmin" => "bg-danger",
+                            "Admin"      => "bg-warning text-dark",
+                            "Employer"   => "bg-info text-dark",
+                            "Worker"     => "bg-success",
+                            _            => "bg-secondary"
+                        };
+                        <tr>
+                            <td><i class="bi bi-person-circle me-1 text-muted"></i>@s.Email</td>
+                            <td><span class="badge @roleBadge">@(string.IsNullOrEmpty(s.Role) ? "—" : s.Role)</span></td>
+                            <td><code>@s.IpAddress</code></td>
+                            <td><small>@s.LoginTime.ToLocalTime().ToString("dd MMM HH:mm")</small></td>
+                            <td>
+                                @{
+                                    var ago = (DateTime.UtcNow - s.LastActive).TotalMinutes;
+                                    <small class="@(ago < 5 ? "text-success" : "text-muted")">
+                                        @(ago < 1 ? "Just now" : $"{(int)ago}m ago")
+                                    </small>
+                                }
+                            </td>
+                            <td><small class="text-muted">@(s.UserAgent.Length > 60 ? s.UserAgent[..60] + "…" : s.UserAgent)</small></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<!-- Quick Links -->
+<div class="row g-3 mt-3">
+    <div class="col-md-4">
+        <a asp-page="/SuperAdmin/Users" class="card text-decoration-none shadow-sm h-100 border-0">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-people fs-1 text-primary mb-2 d-block"></i>
+                <h6 class="fw-bold">Manage Users</h6>
+                <p class="text-muted small mb-0">Add, edit, delete users and assign roles</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-page="/SuperAdmin/ActiveSessions" class="card text-decoration-none shadow-sm h-100 border-0">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-activity fs-1 text-success mb-2 d-block"></i>
+                <h6 class="fw-bold">Active Sessions</h6>
+                <p class="text-muted small mb-0">Full real-time session details</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-page="/Admin/Dashboard" class="card text-decoration-none shadow-sm h-100 border-0">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-speedometer2 fs-1 text-warning mb-2 d-block"></i>
+                <h6 class="fw-bold">Admin Dashboard</h6>
+                <p class="text-muted small mb-0">Platform KPIs, charts and analytics</p>
+            </div>
+        </a>
+    </div>
+</div>

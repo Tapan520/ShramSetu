@@ -100,6 +100,30 @@
                                 </ul>
                             </li>
                         }
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   style="color:#fbbf24 !important; font-weight:700;">
+                                    <i class="bi bi-shield-fill-check me-1"></i>SuperAdmin
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="/SuperAdmin/Dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-page="/SuperAdmin/Users"><i class="bi bi-people me-1"></i>Manage Users</a></li>
+                                    <li><a class="dropdown-item" asp-page="/SuperAdmin/ActiveSessions"><i class="bi bi-activity me-1"></i>Active Sessions</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Dashboard"><i class="bi bi-shield-lock me-1"></i>Admin Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Workers"><i class="bi bi-person-check me-1"></i>Verify Workers</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Sourcing"><i class="bi bi-headset me-1"></i>Sourcing</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Bookings"><i class="bi bi-calendar2-check me-1"></i>Bookings</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Analytics"><i class="bi bi-bar-chart-line me-1"></i>Analytics</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/SkillCategories"><i class="bi bi-tags me-1"></i>Skill Categories</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/Announcements"><i class="bi bi-megaphone me-1"></i>Announcements</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/FeatureFlags"><i class="bi bi-toggles me-1"></i>Feature Flags</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Admin/AuditLogs"><i class="bi bi-journal-check me-1"></i>Audit Logs</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav align-items-lg-center gap-1">

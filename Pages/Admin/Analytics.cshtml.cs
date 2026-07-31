@@ -6,7 +6,7 @@ using ShramSetu.Data;
 
 namespace ShramSetu.Pages.Admin;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class AnalyticsModel : PageModel
 {
     private readonly ApplicationDbContext _db;

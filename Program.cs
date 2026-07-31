@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using ShramSetu.Data;
 using ShramSetu.Hubs;
 using ShramSetu.Jobs;
+using ShramSetu.Middleware;
 using ShramSetu.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -180,6 +181,16 @@ builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<ApplicationDbContext>("database");
 
+// Online user tracking
+builder.Services.AddSingleton<OnlineUserTracker>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // ?????????????????????????????????????????????????????????????????????????????
 var app = builder.Build();
 
@@ -204,6 +215,9 @@ app.UseSwaggerUI(c =>
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
+app.UseMiddleware<OnlineUserMiddleware>();
 
 app.UseIpRateLimiting();
 
