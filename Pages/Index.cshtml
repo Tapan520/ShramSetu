@@ -4,36 +4,77 @@
     ViewData["Title"] = "Home";
 }
 
-<!-- Hero -->
-<div class="px-4 py-5 my-3 text-center bg-primary text-white rounded-3">
-    <i class="bi bi-people-fill display-4"></i>
-    <h1 class="display-5 fw-bold mt-2">ShramSetu</h1>
-    <p class="col-lg-8 mx-auto lead">
-        Connecting skilled unorganised-sector workers with individuals, companies and contractors across India.
-    </p>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3">
-        <a asp-page="/Workers/Index" class="btn btn-light btn-lg px-4">
-            <i class="bi bi-search me-1"></i> Find a Worker
-        </a>
-        <a asp-page="/Register/Worker" class="btn btn-outline-light btn-lg px-4">
-            <i class="bi bi-person-plus me-1"></i> Register as Worker
-        </a>
+<!-- ── Hero ─────────────────────────────────────── -->
+<div class="ss-hero my-3">
+    <div class="hero-content text-center">
+        <span class="ss-stat-chip mb-3 me-2"><i class="bi bi-patch-check-fill text-warning"></i> Verified Workers</span>
+        <span class="ss-stat-chip mb-3"><i class="bi bi-shield-check text-success"></i> KYC Backed</span>
+        <h1 class="display-5 fw-bold mt-3 mb-2" style="letter-spacing:-.5px;">
+            Hire Skilled Workers,<br class="d-none d-md-block"> Across India
+        </h1>
+        <p class="col-lg-7 mx-auto lead mb-4" style="opacity:.88;font-size:1.1rem;">
+            ShramSetu connects verified unorganised-sector workers with individuals,
+            companies and contractors — fast, trusted &amp; transparent.
+        </p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a asp-page="/Workers/Index" class="btn btn-light btn-lg px-5">
+                <i class="bi bi-search me-2"></i>Find a Worker
+            </a>
+            <a asp-page="/Register/Worker" class="btn btn-outline-light btn-lg px-5">
+                <i class="bi bi-person-plus me-2"></i>Register as Worker
+            </a>
+        </div>
     </div>
 </div>
 
-<!-- Skill categories -->
+<!-- ── Stats strip ──────────────────────────────── -->
+<div class="row g-3 my-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 text-center py-3 px-2">
+            <i class="bi bi-person-check-fill fs-2 mb-2" style="color:#10b981"></i>
+            <div class="fw-bold fs-5">1,200+</div>
+            <div class="text-muted" style="font-size:.8rem;">Verified Workers</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 text-center py-3 px-2">
+            <i class="bi bi-building fs-2 mb-2" style="color:#2563eb"></i>
+            <div class="fw-bold fs-5">350+</div>
+            <div class="text-muted" style="font-size:.8rem;">Employers</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 text-center py-3 px-2">
+            <i class="bi bi-briefcase-fill fs-2 mb-2" style="color:#f59e0b"></i>
+            <div class="fw-bold fs-5">4,800+</div>
+            <div class="text-muted" style="font-size:.8rem;">Jobs Posted</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 text-center py-3 px-2">
+            <i class="bi bi-star-fill fs-2 mb-2" style="color:#6366f1"></i>
+            <div class="fw-bold fs-5">4.7 ★</div>
+            <div class="text-muted" style="font-size:.8rem;">Avg. Rating</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Browse by Skill ──────────────────────────── -->
 <section class="my-5">
-    <h2 class="text-center mb-4">Browse by Skill</h2>
+    <div class="text-center">
+        <h2 class="ss-section-title">Browse by Skill</h2>
+        <div class="ss-divider"></div>
+        <p class="ss-section-sub">Find the right professional for every kind of work</p>
+    </div>
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3 justify-content-center">
         @foreach (var cat in Model.Categories)
         {
             <div class="col">
-                <a asp-page="/Workers/Index" asp-route-skillCategoryId="@cat.Id"
-                   class="text-decoration-none">
-                    <div class="card h-100 text-center shadow-sm border-0 skill-card">
+                <a asp-page="/Workers/Index" asp-route-skillCategoryId="@cat.Id" class="text-decoration-none">
+                    <div class="card h-100 text-center border-0 skill-card">
                         <div class="card-body py-4">
                             <i class="@cat.IconCssClass fs-1 text-primary"></i>
-                            <p class="card-text fw-semibold mt-2 mb-0">@cat.Name</p>
+                            <p class="card-text fw-semibold mt-2 mb-0 small">@cat.Name</p>
                         </div>
                     </div>
                 </a>
@@ -42,39 +83,45 @@
     </div>
 </section>
 
-<!-- How it works -->
-<section class="my-5">
-    <h2 class="text-center mb-4">How It Works</h2>
+<!-- ── How It Works ─────────────────────────────── -->
+<section class="my-5 py-4 bg-white rounded-xl shadow-sm px-4">
+    <div class="text-center">
+        <h2 class="ss-section-title">How It Works</h2>
+        <div class="ss-divider"></div>
+        <p class="ss-section-sub">Simple steps to hire or get hired</p>
+    </div>
     <div class="row g-4 text-center">
         <div class="col-md-4">
-            <i class="bi bi-person-check fs-1 text-success"></i>
-            <h5 class="mt-2">Worker Registers</h5>
-            <p class="text-muted">Workers sign up, upload documents and get verified by our admin team.</p>
+            <div class="ss-step-icon" style="background:#ecfdf5;">
+                <i class="bi bi-person-check-fill text-success"></i>
+            </div>
+            <h5 class="fw-700">Worker Registers</h5>
+            <p class="text-muted small">Workers sign up, upload documents and get verified by our admin team.</p>
         </div>
         <div class="col-md-4">
-            <i class="bi bi-search fs-1 text-primary"></i>
-            <h5 class="mt-2">Employer Searches</h5>
-            <p class="text-muted">Filter by skill, location, experience and wage to find the right person.</p>
+            <div class="ss-step-icon" style="background:#eff6ff;">
+                <i class="bi bi-search text-primary"></i>
+            </div>
+            <h5 class="fw-700">Employer Searches</h5>
+            <p class="text-muted small">Filter by skill, location, experience and wage to find the right person.</p>
         </div>
         <div class="col-md-4">
-            <i class="bi bi-handshake fs-1 text-warning"></i>
-            <h5 class="mt-2">Connect & Hire</h5>
-            <p class="text-muted">Contact directly or raise a sourcing request and let us find the right match.</p>
+            <div class="ss-step-icon" style="background:#fffbeb;">
+                <i class="bi bi-handshake text-warning"></i>
+            </div>
+            <h5 class="fw-700">Connect &amp; Hire</h5>
+            <p class="text-muted small">Book directly or raise a sourcing request and let our team handle it.</p>
         </div>
     </div>
 </section>
 
-<!-- Concierge CTA -->
-<div class="p-4 my-4 bg-light rounded-3 text-center">
-    <h4><i class="bi bi-headset me-2"></i>Need workers arranged for you?</h4>
-    <p class="text-muted">Our concierge team will source, vet and deliver the right workers for your project.</p>
-    <a asp-page="/Sourcing/New" class="btn btn-primary">
-        Raise a Sourcing Request
+<!-- ── Concierge CTA ────────────────────────────── -->
+<div class="ss-cta-banner p-4 my-4 text-center">
+    <i class="bi bi-headset fs-2 text-warning mb-2 d-block"></i>
+    <h4 class="fw-bold mb-1">Need workers arranged for you?</h4>
+    <p class="text-muted mb-3">Our concierge team will source, vet and deliver the right workers for your project within 24 hours.</p>
+    <a asp-page="/Sourcing/New" class="btn btn-primary btn-lg px-5">
+        <i class="bi bi-send me-2"></i>Raise a Sourcing Request
     </a>
 </div>
 
-@section Scripts {
-<style>
-    .skill-card:hover { background-color: #f0f4ff; transform: translateY(-2px); transition: .2s; }
-</style>
-}

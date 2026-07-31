@@ -11,30 +11,45 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow">
             <div class="container">
-                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">
-                    <i class="bi bi-people-fill me-1"></i>ShramSetu
+                <!-- Brand -->
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <span class="brand-icon"><i class="bi bi-people-fill"></i></span>
+                    <span>
+                        ShramSetu
+                        <span class="brand-sub">CONNECTING INDIA'S WORKFORCE</span>
+                    </span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-3">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">
+                                <i class="bi bi-house me-1"></i>Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-page="/Workers/Index">Find Workers</a>
+                            <a class="nav-link" asp-area="" asp-page="/Workers/Index">
+                                <i class="bi bi-search me-1"></i>Find Workers
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-page="/Jobs/Index">Jobs</a>
+                            <a class="nav-link" asp-area="" asp-page="/Jobs/Index">
+                                <i class="bi bi-briefcase me-1"></i>Jobs
+                            </a>
                         </li>
                         @if (User.IsInRole("Worker"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Worker</a>
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-badge me-1"></i>My Portal
+                                </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-page="/Workers/MyProfile"><i class="bi bi-person me-1"></i>My Profile</a></li>
                                     <li><a class="dropdown-item" asp-page="/Workers/Onboarding"><i class="bi bi-check2-square me-1"></i>Setup Wizard</a></li>
@@ -49,7 +64,9 @@
                         @if (User.IsInRole("Employer") || User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Employer</a>
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-building me-1"></i>Employer
+                                </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-page="/Employer/Dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
                                     <li><a class="dropdown-item" asp-page="/Jobs/Post"><i class="bi bi-plus-circle me-1"></i>Post Job</a></li>
@@ -66,7 +83,9 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">Admin</a>
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-shield-lock me-1"></i>Admin
+                                </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-page="/Admin/Dashboard"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
                                     <li><a class="dropdown-item" asp-page="/Admin/Workers"><i class="bi bi-person-check me-1"></i>Verify Workers</a></li>
@@ -82,38 +101,45 @@
                             </li>
                         }
                     </ul>
-                    <ul class="navbar-nav">
+
+                    <ul class="navbar-nav align-items-lg-center gap-1">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white position-relative" asp-page="/Account/Notifications">
+                                <a class="nav-link position-relative" asp-page="/Account/Notifications" title="Notifications">
                                     <i class="bi bi-bell fs-5"></i>
                                     <span id="notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-page="/Account/Bookings">My Bookings</a>
+                                <a class="nav-link" asp-area="" asp-page="/Account/Bookings">
+                                    <i class="bi bi-calendar-check me-1"></i>Bookings
+                                </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item ms-1">
                                 <form method="post" asp-area="Identity" asp-page="/Account/Logout"
                                       asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-                                    <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-light fw-semibold px-3">
+                                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                                    </button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
-                                    Register
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-plus me-1"></i>Register
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" asp-page="/Register/Worker"><i class="bi bi-person-arms-up me-1"></i>As Worker</a></li>
                                     <li><a class="dropdown-item" asp-page="/Register/Employer"><i class="bi bi-building me-1"></i>As Employer / Contractor</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            <li class="nav-item ms-1">
+                                <a class="btn btn-sm btn-light fw-bold px-3" asp-area="Identity" asp-page="/Account/Login">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                                </a>
                             </li>
                         }
                     </ul>
@@ -121,19 +147,20 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @if (TempData["Success"] is string successMsg)
             {
-                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                    <i class="bi bi-check-circle me-1"></i> @successMsg
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>@successMsg
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             }
             @if (TempData["Error"] is string errorMsg)
             {
-                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-                    <i class="bi bi-exclamation-circle me-1"></i> @errorMsg
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>@errorMsg
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             }
@@ -141,10 +168,47 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-4 py-3">
+    <!-- Footer -->
+    <footer class="ss-footer">
         <div class="container">
-            &copy; @DateTime.Now.Year ShramSetu — Connecting workers with opportunity.
-            <span class="float-end"><a asp-area="" asp-page="/Privacy">Privacy</a></span>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="footer-brand mb-2">
+                        <i class="bi bi-people-fill me-2"></i>ShramSetu
+                    </div>
+                    <p class="mb-0" style="font-size:.85rem;line-height:1.7">
+                        India's trusted platform connecting skilled<br>
+                        unorganised-sector workers with employers.
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <div class="fw-semibold text-white mb-2" style="font-size:.85rem;">Workers</div>
+                    <ul class="list-unstyled mb-0" style="font-size:.85rem;">
+                        <li class="mb-1"><a asp-page="/Register/Worker">Register</a></li>
+                        <li class="mb-1"><a asp-page="/Workers/Index">Browse Profiles</a></li>
+                        <li class="mb-1"><a asp-page="/Jobs/Index">Find Jobs</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <div class="fw-semibold text-white mb-2" style="font-size:.85rem;">Employers</div>
+                    <ul class="list-unstyled mb-0" style="font-size:.85rem;">
+                        <li class="mb-1"><a asp-page="/Register/Employer">Register</a></li>
+                        <li class="mb-1"><a asp-page="/Jobs/Post">Post a Job</a></li>
+                        <li class="mb-1"><a asp-page="/Sourcing/New">Concierge Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <div class="fw-semibold text-white mb-2" style="font-size:.85rem;">Company</div>
+                    <ul class="list-unstyled mb-0" style="font-size:.85rem;">
+                        <li class="mb-1"><a asp-page="/Privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="footer-divider" />
+            <div class="d-flex flex-wrap justify-content-between align-items-center" style="font-size:.82rem;">
+                <span>&copy; @DateTime.Now.Year ShramSetu. All rights reserved.</span>
+                <span>Made with <i class="bi bi-heart-fill text-danger"></i> for India's workforce</span>
+            </div>
         </div>
     </footer>
 
@@ -163,14 +227,12 @@
                     .build();
 
                 conn.on("ReceiveNotification", (data) => {
-                    // Update bell badge
                     const badge = document.getElementById('notif-badge');
                     if (badge) {
                         const count = parseInt(badge.textContent || '0') + 1;
                         badge.textContent = count > 99 ? '99+' : count;
                         badge.classList.remove('d-none');
                     }
-                    // Show toast notification
                     const toastEl = document.createElement('div');
                     toastEl.className = 'toast align-items-center text-white bg-primary border-0 position-fixed bottom-0 end-0 m-3';
                     toastEl.style.zIndex = '9999';
