@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShramSetu.Data;
@@ -11,31 +12,35 @@ using ShramSetu.Data;
 namespace ShramSetu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260730080256_AllSprints")]
-    partial class AllSprints
+    [Migration("20260731055206_InitialMySql")]
+    partial class InitialMySql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.29");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.29")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
@@ -50,17 +55,19 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -72,54 +79,54 @@ namespace ShramSetu.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
@@ -137,17 +144,19 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -159,17 +168,17 @@ namespace ShramSetu.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -181,10 +190,10 @@ namespace ShramSetu.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -196,47 +205,94 @@ namespace ShramSetu.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.Announcement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("BannerCssClass")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("SendPush")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("SendSms")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("ShowBanner")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Announcements");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.AppVersion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("ForceUpdate")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LatestVersion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("MinVersion")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Platform")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("UpdateMessage")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -246,41 +302,87 @@ namespace ShramSetu.Migrations
                     b.ToTable("AppVersions");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.AssessmentQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("CorrectOption")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Marks")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OptionA")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OptionB")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OptionC")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OptionD")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("SkillCategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillCategoryId");
+
+                    b.ToTable("AssessmentQuestions");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.AttendanceRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<TimeSpan?>("CheckInTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("time(6)");
 
                     b.Property<TimeSpan?>("CheckOutTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("time(6)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("HoursWorked")
                         .HasColumnType("decimal(6,2)");
 
                     b.Property<DateTime>("MarkedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("MarkedByUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -295,34 +397,34 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Action")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("EntityId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("EntityType")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("NewValues")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("OccurredAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("OldValues")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -337,37 +439,37 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("CheckType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ProviderName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ProviderReference")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ReportUrl")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("RequestedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("RequestedByUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ResultSummary")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -380,34 +482,34 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("AgreedWage")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("DurationDays")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -422,32 +524,32 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("RecipientUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RoomKey")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("SenderUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("SentAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -458,51 +560,82 @@ namespace ShramSetu.Migrations
                     b.ToTable("ChatMessages");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.ComplianceCheck", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("CheckType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CheckedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Recommendation")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("ComplianceChecks");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.Dispute", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AdminNotes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("AgainstUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid?>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RaisedByUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Resolution")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ResolvedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ResolvedByUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -515,24 +648,24 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("DisputeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("FileUrl")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("SubmittedByUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -541,41 +674,74 @@ namespace ShramSetu.Migrations
                     b.ToTable("DisputeEvidences");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.EmergencyContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Relation")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("EmergencyContacts");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.EmployerAccount", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CompanyName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -586,25 +752,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -622,31 +788,31 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("AmountPaid")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PaymentReference")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("PlanId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -657,23 +823,123 @@ namespace ShramSetu.Migrations
                     b.ToTable("EmployerSubscriptions");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.FeatureFlag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UpdatedByUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("FeatureFlags");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.GstInvoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("BaseAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BilledToAddress")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BilledToGstin")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BilledToName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BilledToUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("CgstAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CgstRate")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("IssuedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PdfUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("SgstAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SgstRate")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("SubscriptionId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceNumber")
+                        .IsUnique();
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("GstInvoices");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.JobAlert", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("City")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("LastTriggeredAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal?>("MaxWage")
                         .HasColumnType("decimal(18,2)");
@@ -682,16 +948,16 @@ namespace ShramSetu.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("SendPush")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("SendSms")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid?>("SkillCategoryId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -706,28 +972,28 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("AppliedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("CoverNote")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("EmployerNote")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("JobPostId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("ReviewedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -743,48 +1009,48 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("ClosedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("DailyWage")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DurationDays")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("LocationCity")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LocationState")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("SkillCategoryId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("VacancyCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -795,34 +1061,133 @@ namespace ShramSetu.Migrations
                     b.ToTable("JobPosts");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.JobPostTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("DailyWage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DurationDays")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("EmployerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("LocationCity")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LocationState")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("SkillCategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("VacancyCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployerId");
+
+                    b.HasIndex("SkillCategoryId");
+
+                    b.ToTable("JobPostTemplates");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.MinimumWageConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("EffectiveFrom")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("MinDailyWage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Reference")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("SkillCategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillCategoryId");
+
+                    b.HasIndex("State", "SkillCategoryId");
+
+                    b.ToTable("MinimumWageConfigs");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("ActionUrl")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Channel")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("FailureReason")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsSent")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RecipientUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("SentAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -833,44 +1198,44 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("BookingUpdates_Push")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("BookingUpdates_SMS")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("BookingUpdates_WhatsApp")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("ChatMessages_Push")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("JobAlerts_Push")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("JobAlerts_SMS")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("PaymentNotifications_Push")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("PaymentNotifications_SMS")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("SystemAnnouncements_Push")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("SystemAnnouncements_SMS")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -880,31 +1245,65 @@ namespace ShramSetu.Migrations
                     b.ToTable("NotificationPreferences");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.OnboardingSlide", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("CtaLink")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CtaText")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OnboardingSlides");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.OtpCode", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Attempts")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("CodeHash")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsUsed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -917,25 +1316,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("DailyWage")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("DaysWorked")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Deductions")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("GrossAmount")
                         .HasColumnType("decimal(18,2)");
@@ -944,22 +1343,22 @@ namespace ShramSetu.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("PaidAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PaymentReference")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("PeriodEnd")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("PeriodStart")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -972,32 +1371,78 @@ namespace ShramSetu.Migrations
                     b.ToTable("PayrollRecords");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.PlatformFee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CollectedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("CommissionRate")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("SubscriptionId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("TransactionRef")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("PlatformFees");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.PushToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("LastUsedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Platform")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("RegisteredAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -1013,33 +1458,33 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("ReferredUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ReferrerUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("RewardAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("RewardCredited")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("VerifiedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1053,25 +1498,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1089,7 +1534,7 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -1098,25 +1543,25 @@ namespace ShramSetu.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("IssuedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("RepaidAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1133,19 +1578,19 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Note")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("SavedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1157,18 +1602,58 @@ namespace ShramSetu.Migrations
                     b.ToTable("SavedWorkers");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.SkillAssessment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastAttemptAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("PassedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PassingScore")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SkillCategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SkillCategoryId");
+
+                    b.HasIndex("WorkerId", "SkillCategoryId")
+                        .IsUnique();
+
+                    b.ToTable("SkillAssessments");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.SkillCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("IconCssClass")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1179,44 +1664,44 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AdminNotes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("BudgetPerDay")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DurationDays")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("FulfilledAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("LocationCity")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LocationState")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("SkillCategoryId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("WorkerCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1231,26 +1716,26 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("CanAccessAnalytics")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("CanAccessChat")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MaxJobPosts")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("MaxSourcingRequests")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("PriceMonthly")
                         .HasColumnType("decimal(18,2)");
@@ -1259,51 +1744,136 @@ namespace ShramSetu.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("PrioritySupport")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Tier")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("SubscriptionPlans");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.Testimonial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Headline")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal?>("MonthlyEarnings")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Story")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("Testimonials");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.UserBan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("BannedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("BannedByUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("LiftReason")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("LiftedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("LiftedByUserId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBans");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.UserReport", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AdminNotes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Details")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid?>("JobPostId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ReportedByUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ReportedUserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ReviewedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1312,21 +1882,73 @@ namespace ShramSetu.Migrations
                     b.ToTable("UserReports");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.UserSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DeviceName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DeviceType")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("LastActiveAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("SessionToken")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionToken")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSessions");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.WageRateCard", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("EffectiveFrom")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("EffectiveTo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("MaxDailyWage")
                         .HasColumnType("decimal(18,2)");
@@ -1338,16 +1960,16 @@ namespace ShramSetu.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("SkillCategoryId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("State")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpdatedByUserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1360,7 +1982,7 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -1370,19 +1992,19 @@ namespace ShramSetu.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ReferenceId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("TransactedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WalletId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1395,37 +2017,37 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("BookingId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Content")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("EmployerSignatureRef")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("EmployerSignedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("PdfUrl")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("WorkerSignatureRef")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("WorkerSignedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1439,16 +2061,16 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AadhaarHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("ExpectedDailyWage")
                         .HasColumnType("decimal(18,2)");
@@ -1458,41 +2080,47 @@ namespace ShramSetu.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsAvailable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("KycStatus")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double");
 
                     b.Property<string>("LocationCity")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LocationState")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhotoUrl")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("SkillCategoryId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("SubSkills")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("YearsOfExperience")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1505,25 +2133,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Note")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SlotType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1536,22 +2164,22 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("EarnedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Tier")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1564,29 +2192,29 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("AdminNotes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsVerified")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("VerifiedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1599,25 +2227,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("ComputedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid?>("JobPostId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Reason")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<double>("Score")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double");
 
                     b.Property<Guid?>("SourcingRequestId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1630,27 +2258,103 @@ namespace ShramSetu.Migrations
                     b.ToTable("WorkerMatchScores");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.WorkerOfTheMonth", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NominatedByUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkerId");
+
+                    b.HasIndex("Month", "Year")
+                        .IsUnique();
+
+                    b.ToTable("WorkerOfTheMonths");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.WorkerOnboarding", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("BankDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("DocumentsDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("LocationDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("PhotoDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("SkillsDone")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkerId")
+                        .IsUnique();
+
+                    b.ToTable("WorkerOnboardings");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.WorkerPortfolioPhoto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Caption")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DisplayOrder")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("PhotoUrl")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1663,25 +2367,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("BankAccountNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("IfscCode")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UpiId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1695,29 +2399,29 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("EmployerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ProjectName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SiteLocation")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -1730,25 +2434,25 @@ namespace ShramSetu.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("JoinedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("LeftAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Role")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("TeamId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("WorkerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -1810,6 +2514,17 @@ namespace ShramSetu.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.AssessmentQuestion", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.SkillCategory", "SkillCategory")
+                        .WithMany()
+                        .HasForeignKey("SkillCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SkillCategory");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.AttendanceRecord", b =>
                 {
                     b.HasOne("ShramSetu.Core.Entities.Booking", "Booking")
@@ -1859,6 +2574,17 @@ namespace ShramSetu.Migrations
                     b.Navigation("Worker");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.ComplianceCheck", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.Dispute", b =>
                 {
                     b.HasOne("ShramSetu.Core.Entities.Booking", "Booking")
@@ -1878,6 +2604,17 @@ namespace ShramSetu.Migrations
                         .IsRequired();
 
                     b.Navigation("Dispute");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.EmergencyContact", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.Worker", "Worker")
+                        .WithMany("EmergencyContacts")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("ShramSetu.Core.Entities.EmployerReview", b =>
@@ -1924,6 +2661,16 @@ namespace ShramSetu.Migrations
                     b.Navigation("Employer");
 
                     b.Navigation("Plan");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.GstInvoice", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.EmployerSubscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("ShramSetu.Core.Entities.JobAlert", b =>
@@ -1982,6 +2729,36 @@ namespace ShramSetu.Migrations
                     b.Navigation("SkillCategory");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.JobPostTemplate", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.EmployerAccount", "Employer")
+                        .WithMany("JobPostTemplates")
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShramSetu.Core.Entities.SkillCategory", "SkillCategory")
+                        .WithMany()
+                        .HasForeignKey("SkillCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employer");
+
+                    b.Navigation("SkillCategory");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.MinimumWageConfig", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.SkillCategory", "SkillCategory")
+                        .WithMany()
+                        .HasForeignKey("SkillCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SkillCategory");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.PayrollRecord", b =>
                 {
                     b.HasOne("ShramSetu.Core.Entities.Booking", "Booking")
@@ -2007,6 +2784,23 @@ namespace ShramSetu.Migrations
                     b.Navigation("Employer");
 
                     b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.PlatformFee", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ShramSetu.Core.Entities.EmployerSubscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("ShramSetu.Core.Entities.Review", b =>
@@ -2081,6 +2875,25 @@ namespace ShramSetu.Migrations
                     b.Navigation("Worker");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.SkillAssessment", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.SkillCategory", "SkillCategory")
+                        .WithMany()
+                        .HasForeignKey("SkillCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ShramSetu.Core.Entities.Worker", "Worker")
+                        .WithMany("SkillAssessments")
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SkillCategory");
+
+                    b.Navigation("Worker");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.SourcingRequest", b =>
                 {
                     b.HasOne("ShramSetu.Core.Entities.EmployerAccount", "Employer")
@@ -2098,6 +2911,17 @@ namespace ShramSetu.Migrations
                     b.Navigation("Employer");
 
                     b.Navigation("SkillCategory");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.Testimonial", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.Worker", "Worker")
+                        .WithMany()
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("ShramSetu.Core.Entities.UserReport", b =>
@@ -2212,6 +3036,28 @@ namespace ShramSetu.Migrations
                     b.Navigation("Worker");
                 });
 
+            modelBuilder.Entity("ShramSetu.Core.Entities.WorkerOfTheMonth", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.Worker", "Worker")
+                        .WithMany()
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Worker");
+                });
+
+            modelBuilder.Entity("ShramSetu.Core.Entities.WorkerOnboarding", b =>
+                {
+                    b.HasOne("ShramSetu.Core.Entities.Worker", "Worker")
+                        .WithMany()
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Worker");
+                });
+
             modelBuilder.Entity("ShramSetu.Core.Entities.WorkerPortfolioPhoto", b =>
                 {
                     b.HasOne("ShramSetu.Core.Entities.Worker", "Worker")
@@ -2278,6 +3124,8 @@ namespace ShramSetu.Migrations
                 {
                     b.Navigation("Bookings");
 
+                    b.Navigation("JobPostTemplates");
+
                     b.Navigation("JobPosts");
 
                     b.Navigation("Reviews");
@@ -2328,6 +3176,8 @@ namespace ShramSetu.Migrations
 
                     b.Navigation("Documents");
 
+                    b.Navigation("EmergencyContacts");
+
                     b.Navigation("EmployerReviews");
 
                     b.Navigation("JobAlerts");
@@ -2341,6 +3191,8 @@ namespace ShramSetu.Migrations
                     b.Navigation("SalaryAdvances");
 
                     b.Navigation("SavedByEmployers");
+
+                    b.Navigation("SkillAssessments");
 
                     b.Navigation("TeamMemberships");
                 });
